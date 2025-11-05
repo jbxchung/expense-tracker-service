@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    /* === Core Settings === */
+    "target": "esnext",                    // Use modern JS features supported by Node 25
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["es2023"],                     // Use modern built-in types
+    "types": ["node"],                     // Include Node.js type definitions
+    "allowSyntheticDefaultImports": true,  // Allow `import express from "express"`
+    "esModuleInterop": true,               // Interop for CommonJS modules
+    "forceConsistentCasingInFileNames": true,
+
+    /* === Strictness === */
+    "strict": true,                        // Enable all strict type checks
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* === Paths and Structure === */
+    "rootDir": "src",                      // Where your .ts files live
+    "outDir": "dist",                      // Where compiled .js files go
+    "resolveJsonModule": true,             // Allow importing JSON files
+
+    /* === Emit Behavior === */
+    "skipLibCheck": true,                  // Speed up build (safe for Node)
+    "sourceMap": true,                     // Helpful for debugging
+    "removeComments": true,
+    "noEmitOnError": true,                 // Don't output .js if there are TS errors
+
+    /* === Node-style Imports === */
+    "allowImportingTsExtensions": false,   // Use `.ts` imports only internally
+    "moduleDetection": "force",            // Required for NodeNext with ESM
+    "isolatedModules": true                // Good for tools like ts-node or SWC
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests"]
+}
