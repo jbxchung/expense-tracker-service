@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { Account } from '../models/account';
 import accountService from '../services/account.service';
 
+
 // Read all statements
 export const getAccounts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result: Account[] = await accountService.findAll();
+    const result: Account[] = await accountService.getAll();
 
     res.json(result);
   } catch (error) {
@@ -16,13 +17,13 @@ export const getAccounts = async (req: Request, res: Response, next: NextFunctio
 // Read single item
 export const getAccountById = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.params.id;
-    const item = accountService.findById(id || '');
-    if (!item) {
-      res.status(404).json({ message: 'Item not found' });
+    const id = req.params.id || '';
+    const account = accountService.findById(id);
+    if (!account) {
+      res.status(404).json({ message: 'Account not found' });
       return;
     }
-    res.json(item);
+    res.json(account);
   } catch (error) {
     next(error);
   }
@@ -32,9 +33,9 @@ export const getAccountById = (req: Request, res: Response, next: NextFunction) 
 // Create an item
 export const createAccount = async(req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name } = req.body;
+    const { name, type } = req.body;
 
-    const newAccount: Account = await accountService.create(name);
+    const newAccount: Account = await accountService.create(name, type);
 
     res.status(201).json(newAccount);
   } catch (error) {
