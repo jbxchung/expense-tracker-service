@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { Account } from '../models/account';
+import { Account } from '@prisma/client';
+// import { Account } from '../dao/account';
 import accountService from '../services/account.service';
 
 
@@ -33,9 +34,9 @@ export const getAccountById = (req: Request, res: Response, next: NextFunction) 
 // Create an item
 export const createAccount = async(req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, type } = req.body;
+    const { userId, name, type } = req.body;
 
-    const newAccount: Account = await accountService.create(name, type);
+    const newAccount: Account = await accountService.create(userId, name, type);
 
     res.status(201).json(newAccount);
   } catch (error) {

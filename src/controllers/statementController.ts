@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { statements, Statement } from '../models/statement';
+import { statements, Statement } from '../dao/statement';
 
 // Create an item
 export const uploadStatement = (req: Request, res: Response, next: NextFunction) => {

@@ -1,6 +1,6 @@
-import { Account, AccountType } from '../models/account';
+import { Account, AccountType } from '@prisma/client';
 import { Service } from './service.interface';
-import accountRepository from '../repositories/local/account.repository';
+import accountRepository from '../repositories/account.repository';
 
 class AccountService implements Service {
 
@@ -11,21 +11,25 @@ class AccountService implements Service {
         return accountRepository.findAll();
     }
 
-    async findById(accountId: string): Promise<Account | undefined> {
+    async findById(accountId: string): Promise<Account | null> {
         return accountRepository.findById(accountId);
     }
 
-    async findByName(accountName: string): Promise<Account | undefined> {
-        return accountRepository.findByName(accountName);
+    async findByName(accountName: string, userId?: string): Promise<Account | null> {
+        return accountRepository.findByName(accountName, userId);
     }
     
-    async create(accountName: string, accountType: AccountType): Promise<Account> {        
+    async create(userId: string, accountName: string, accountType: AccountType): Promise<Account> {        
         const existing = await accountRepository.findByName(accountName);
         if (existing) {
             throw new Error('Account with this name already exists');
         }
 
-        return accountRepository.create({ name: accountName, type: accountType });
+        return accountRepository.create({
+            userId: userId,
+            name: accountName,
+            type: accountType
+        });
     }
 
     async delete(accountId: string): Promise<Account | undefined> {
