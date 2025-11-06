@@ -4,3 +4,6 @@ export interface Statement {
   filename: string;
   uploadDate: Date;
 }
+  
+// todo - initialize from filesystem
+export let statements: Statement[] = [];

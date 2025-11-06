@@ -34,9 +34,9 @@ export const getAccountById = (req: Request, res: Response, next: NextFunction) 
 // Create an item
 export const createAccount = async(req: Request, res: Response, next: NextFunction) => {
   try {
-    const { userId, name, type } = req.body;
+    const { userEmail, name, type } = req.body;
 
-    const newAccount: Account = await accountService.create(userId, name, type);
+    const newAccount: Account = await accountService.create(userEmail, name, type);
 
     res.status(201).json(newAccount);
   } catch (error) {
