@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  name        String
+  accounts    Account[]
+  categories  Category[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  CREDIT_CARD
+}
+
+model Account {
+  id            String         @id @default(uuid())
+  name          String
+  type          AccountType
+
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+
+  transactions  Transaction[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+// user-defined categories
+model Category {
+  id            String        @id @default(uuid())
+  name          String
+  description   String?
+
+  userId        String?       // null for global categories
+  user          User?         @relation(fields: [userId], references: [id])
+
+  parentId      String?       // self-referential relationship for subcategories, null for top-level
+  parent        Category?     @relation("CategoryChildren", fields: [parentId], references: [id])
+  children      Category[]    @relation("CategoryChildren")
+
+  transactions  Transaction[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model Transaction {
+  id                  String    @id  @default(uuid())
+  amount              Decimal
+  date                DateTime  // parse from statement document
+
+  accountId           String
+  account             Account   @relation(fields: [accountId], references: [id])
+
+  categoryId          String?   // optional, transactions may be uncategorized
+  category            Category? @relation(fields: [categoryId], references: [id])
+
+  description         String?   // user-entered description
+  originalDescription String?   // raw description from statement document
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
