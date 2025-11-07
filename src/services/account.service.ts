@@ -19,6 +19,10 @@ class AccountService implements Service {
     async findByName(accountName: string, userId?: string): Promise<Account | null> {
         return accountRepository.findByName(accountName, userId);
     }
+
+    async findByUserId(userId: string): Promise<Account[] | null> {
+        return accountRepository.findByUserId(userId);
+    }
     
     async create(userEmail: string, accountName: string, accountType: AccountType): Promise<Account> {        
         const user = await userService.findByEmail(userEmail);
@@ -37,6 +41,15 @@ class AccountService implements Service {
             name: accountName,
             type: accountType
         });
+    }
+
+    async update(accountId: string, updateData: Partial<Account>): Promise<Account | undefined> {
+        const existing = await accountRepository.findById(accountId);
+        if (!existing) {
+            throw new Error(`Could not find account to update: ${accountId}`);
+        }
+
+        return accountRepository.update(accountId, updateData);
     }
 
     async delete(accountId: string): Promise<Account | undefined> {

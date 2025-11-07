@@ -4,7 +4,7 @@ import {
   getStatements,
   getStatementById,
   deleteStatement,
-} from '../controllers/statementController';
+} from '../controllers/statement.controller';
 
 const router = Router();
 
