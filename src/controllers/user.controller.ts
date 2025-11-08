@@ -1,53 +1,51 @@
 import { NextFunction, Request, Response } from 'express';
 import userService from '../services/user.service';
+import { ApiResponse } from '../types/api-response';
+import { User } from '@prisma/client';
+import { HttpError } from '../errors/HttpError';
 
 class UserController {
-  async getAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      const users = await userService.getAll();
-      res.json(users);
-    } catch (e) {
-      next(e);
-    }
+  async getAll(): Promise<ApiResponse<User[]>> {
+    const users = await userService.getAll();
+    return { success: true, message: 'retrieved all users', data: users };
   }
 
-  async getById(req: Request, res: Response, next: NextFunction) {
-    try {      
-      const { id } = req.params;
-      if (!id || typeof id !== 'string') return res.status(400).json({ error: 'ID is required' });
-
-      const user = await userService.findById(id);
-      if (!user) return res.status(404).json({ error: 'User not found' });
-      res.json(user);
-    } catch (e) {
-      next(e);
+  async getById(req: Request): Promise<ApiResponse<User>> {
+    const { id } = req.params;
+    if (!id || typeof id !== 'string') {
+      throw new HttpError(400, 'ID is required');
     }
+
+    const user = await userService.findById(id);
+    if (!user) {
+      throw new HttpError(404, 'User not found');
+    }
+    
+    return { success: true, message: 'User retrieved by id', data: user };
   }
 
-  // todo - this is an exact match search, implement partial match
-  async getByName(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { name } = req.query;
-      if (!name || typeof name !== 'string') return res.status(400).json({ error: 'Name is required' });
-
-      const users = await userService.findByName(name);
-      res.json(users);
-    } catch (e) {
-      next(e);
+  // todo - this is an exact match search right now, should implement partial match
+  async getByName(req: Request): Promise<ApiResponse<User[]>> {
+    const { name } = req.query;
+    if (!name || typeof name !== 'string') {
+      throw new HttpError(400, 'Name is required');
     }
+
+    const users = await userService.findByName(name) ?? [];
+    return { success: true, message: `Users found by name`, data: users };
   }
 
-  async getByEmail(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { email } = req.params;
-      if (!email || typeof email !== 'string') return res.status(400).json({ error: 'Email is required' });
-
-      const user = await userService.findByEmail(email);
-      if (!user) return res.status(404).json({ error: 'User not found' });
-      res.json(user);
-    } catch (e) {
-      next(e);
+  async getByEmail(req: Request): Promise<ApiResponse<User>> {
+    const { email } = req.params;
+    if (!email || typeof email !== 'string') {
+      throw new HttpError(400, 'Email is required');
     }
+
+    const user = await userService.findByEmail(email);
+    if (!user) {
+      throw new HttpError(404, 'User not found');
+    }
+    return { success: true, message: 'User retrieved by email', data: user };
   }
 }
 

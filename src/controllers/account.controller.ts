@@ -11,7 +11,7 @@ class AccountController {
       ? await accountService.findByUserId(userId as string) || []
       : await accountService.getAll();
 
-    return { success: true, data: accounts };
+    return { success: true, message: `Retrieved all accounts for user ${userId}`, data: accounts };
   };
   
   async getAccountById(req: Request): Promise<ApiResponse<Account>> {
@@ -20,13 +20,13 @@ class AccountController {
     if (!account) {
       throw new HttpError(404, 'Account not found');
     }
-    return { success: true, data: account };
+    return { success: true, message: 'Retrieved account', data: account };
   };
   
   async createAccount(req: Request): Promise<ApiResponse<Account>> {
     const { userEmail, name, type } = req.body;
     const newAccount: Account = await accountService.create(userEmail, name, type);
-    return { success: true, data: newAccount };
+    return { success: true, message: 'Created account', data: newAccount };
   };
   
   async updateAccount(req: Request): Promise<ApiResponse<Account>> {
@@ -37,7 +37,7 @@ class AccountController {
     }
 
     const updatedAccount = await accountService.update(id, req.body);
-    return { success: true, data: updatedAccount };
+    return { success: true, message: 'Updated account', data: updatedAccount };
   };
   
   async deleteAccount(req: Request): Promise<ApiResponse<Account>> {
@@ -46,9 +46,9 @@ class AccountController {
     if (!account) {
       throw new HttpError(404, 'Account not found');
     }
-    
+
     const deletedAccount = await accountService.delete(id);
-    return { success: true, data: deletedAccount };
+    return { success: true, message: 'Deleted account', data: deletedAccount };
   };
 }
 
