@@ -1,4 +1,4 @@
-import { Account, AccountType } from '@prisma/client';
+import { Account } from '@prisma/client';
 import accountRepository from '../repositories/account.repository';
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 

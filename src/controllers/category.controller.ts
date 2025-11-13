@@ -3,8 +3,35 @@ import { ApiResponse } from '../types/api-response';
 import { Category } from '@prisma/client';
 import { HttpError } from '../errors/HttpError';
 import categoryService from '../services/category.service';
+import { CategoryTree } from '../types/category';
+import { isCategoryTreeArray } from '../utils/category.util';
 
 class CategoryController {
+  async getCategoryTree(req: Request): Promise<ApiResponse<CategoryTree[]>> {
+    const { userId } = req.query;
+    if (!userId) {
+      throw new HttpError(400, 'userId query parameter is required');
+    }
+
+    const categoryTree = await categoryService.getCategoryTree(userId as string);
+    return { success: true, message: `Retrieved category tree for user ${userId}`, data: categoryTree };
+  }
+
+  async saveCategoryTree(req: Request): Promise<ApiResponse<CategoryTree[]>> {
+    const { userId } = req.query;
+    if (!userId) {
+      throw new HttpError(400, 'userId query parameter is required');
+    }
+
+    if (!isCategoryTreeArray(req.body)) {
+      throw new HttpError(400, 'Invalid category tree format');
+    }
+
+    const categoryTree = await categoryService.saveCategoryTree(userId as string, req.body);
+    return { success: true, message: `Retrieved category tree for user ${userId}`, data: categoryTree };
+  }
+
+
   // return a raw list of the categories for a given user (globals + their own)
   async getCategories(req: Request): Promise<ApiResponse<Category[]>> {
     const { userId } = req.query;

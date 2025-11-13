@@ -13,8 +13,12 @@ class UserRepository extends BaseRepository<Prisma.CategoryDelegate> {
   }
 
   // find categories scoped to a given user
-  async findByUserId(userId: string) {
-    return this.model.findMany({ where: { userId } });
+  async findByUserId(userId: string, includeGlobal = false) {
+    const where = includeGlobal
+    ? { OR: [{ userId }, { userId: null }] }
+    : { userId };
+
+    return this.model.findMany({ where });
   }
 
   async findByName(name: string, userId?: string) {
