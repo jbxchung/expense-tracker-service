@@ -1,12 +1,7 @@
 import { User } from '@prisma/client';
-import { Service } from './service.interface';
 import userRepository from '../repositories/user.repository';
 
-class UserService implements Service {
-
-    async initialize(): Promise<void> {
-    }
-
+class UserService {
     async getAll(): Promise<User[]> {
         return userRepository.findAll();
     }

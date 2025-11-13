@@ -1,12 +1,8 @@
 import { Category } from '@prisma/client';
-import { Service } from './service.interface';
-import categoryRepository from '../repositories/category.repository';
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
+import categoryRepository from '../repositories/category.repository';
 
-class CategoryService implements Service {
-  async initialize(): Promise<void> {
-  }
-
+class CategoryService {
   async findById(categoryId: string): Promise<Category | null> {
     return categoryRepository.findById(categoryId);
   }

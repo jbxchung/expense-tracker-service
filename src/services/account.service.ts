@@ -1,14 +1,8 @@
 import { Account, AccountType } from '@prisma/client';
-import { Service } from './service.interface';
 import accountRepository from '../repositories/account.repository';
-import userService from './user.service';
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 
-class AccountService implements Service {
-
-    async initialize(): Promise<void> {
-    }
-
+class AccountService {
     async getAll(): Promise<Account[]> {
         return accountRepository.findAll();
     }
