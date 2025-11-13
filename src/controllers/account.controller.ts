@@ -24,8 +24,8 @@ class AccountController {
   };
   
   async createAccount(req: Request): Promise<ApiResponse<Account>> {
-    const { userEmail, name, type } = req.body;
-    const newAccount: Account = await accountService.create(userEmail, name, type);
+    const { userId, name, type } = req.body;
+    const newAccount: Account = await accountService.create({ userId, name, type });
     return { success: true, message: 'Created account', data: newAccount };
   };
   

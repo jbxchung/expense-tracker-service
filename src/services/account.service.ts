@@ -2,6 +2,7 @@ import { Account, AccountType } from '@prisma/client';
 import { Service } from './service.interface';
 import accountRepository from '../repositories/account.repository';
 import userService from './user.service';
+import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 
 class AccountService implements Service {
 
@@ -24,23 +25,14 @@ class AccountService implements Service {
         return accountRepository.findByUserId(userId);
     }
     
-    async create(userEmail: string, accountName: string, accountType: AccountType): Promise<Account> {        
-        const user = await userService.findByEmail(userEmail);
+    async create(account: Omit<Account, DB_GENERATED_FIELDS>): Promise<Account> {        
 
-        if (!user) {
-            throw new Error(`Could not find user with email: ${userEmail}`);
-        }
-
-        const existingAccount = await accountRepository.findByName(accountName, user.id);
+        const existingAccount = await accountRepository.findByName(account.name, account.userId);
         if (existingAccount) {
             throw new Error('Account with this name already exists under user');
         }
 
-        return accountRepository.create({
-            userId: user.id,
-            name: accountName,
-            type: accountType
-        });
+        return accountRepository.create(account);
     }
 
     async update(accountId: string, updateData: Partial<Account>): Promise<Account | undefined> {

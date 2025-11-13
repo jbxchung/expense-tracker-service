@@ -5,7 +5,7 @@ import { HttpError } from '../errors/HttpError';
 import categoryService from '../services/category.service';
 
 class CategoryController {
-  // return all the categories for a given user (globals + their own)
+  // return a raw list of the categories for a given user (globals + their own)
   async getCategories(req: Request): Promise<ApiResponse<Category[]>> {
     const { userId } = req.query;
     const categories = await categoryService.findGlobal() ?? [];
