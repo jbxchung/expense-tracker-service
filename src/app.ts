@@ -4,6 +4,7 @@ import { accessLog } from './middlewares/accessLog';
 import { errorHandler } from './middlewares/errorHandler';
 
 import accountRoutes from './routes/account.route';
+import categoryRoutes from './routes/category.route';
 import statementRoutes from './routes/statement.route';
 import userRoutes from './routes/user.route';
 
@@ -17,12 +18,13 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(accessLog);
 
-// Routes
+// routes
 app.use('/accounts', accountRoutes);
+app.use('/categories', categoryRoutes);
 app.use('/statements', statementRoutes);
 app.use('/users', userRoutes);
 
-// Global error handler (should be after routes)
+// global error handler
 app.use(errorHandler);
 
 export default app;

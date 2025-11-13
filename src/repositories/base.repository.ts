@@ -5,6 +5,8 @@ type EntityOf<TDelegate> =
 // extract ID type from an entity
 type IdOf<TEntity> = TEntity extends { id: infer TId } ? TId : never;
 
+export type DB_GENERATED_FIELDS = 'id' | 'createdAt' | 'updatedAt';
+
 export abstract class BaseRepository<TDelegate extends { findUnique: any; findMany: any; create: any; update: any; delete: any; }> {
   protected model: TDelegate;
 
@@ -20,11 +22,11 @@ export abstract class BaseRepository<TDelegate extends { findUnique: any; findMa
     return this.model.findUnique({ where: { id } });
   }
 
-  async create(data: Omit<EntityOf<TDelegate>, 'id' | 'createdAt' | 'updatedAt'>): Promise<EntityOf<TDelegate>> {
+  async create(data: Omit<EntityOf<TDelegate>, DB_GENERATED_FIELDS>): Promise<EntityOf<TDelegate>> {
     return this.model.create({ data });
   }
 
-  async update(id: IdOf<EntityOf<TDelegate>>, data: Partial<Omit<EntityOf<TDelegate>, 'id' | 'createdAt' | 'updatedAt'>>): Promise<EntityOf<TDelegate>> {
+  async update(id: IdOf<EntityOf<TDelegate>>, data: Partial<Omit<EntityOf<TDelegate>, DB_GENERATED_FIELDS>>): Promise<EntityOf<TDelegate>> {
     return this.model.update({ where: { id }, data });
   }
 
