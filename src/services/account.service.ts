@@ -26,25 +26,20 @@ class AccountService {
   }
   
   async create(account: Omit<Account, DB_GENERATED_FIELDS>): Promise<Account> {        
-    const existingAccount = await accountRepository.findByName(account.name, account.userId);
-    if (existingAccount) {
-      throw new HttpError(400, ERROR_MESSAGES.ACCOUNT_NAME_EXISTS);
-    }
+    await this.ensureUniqueName(account.name, account.userId);
 
     return accountRepository.create(account);
   }
 
   async update(accountId: string, updateData: Partial<Account>): Promise<Account | undefined> {
-    const existing = await accountRepository.findById(accountId);
-    if (!existing) {
+    const existingAccount = await accountRepository.findById(accountId);
+    if (!existingAccount) {
       throw new HttpError(400, `${ERROR_MESSAGES.ID_NOT_FOUND}${accountId}`);
     }
 
-    if (updateData.name && updateData.name !== existing.name) {
-      const duplicate = await accountRepository.findByName(updateData.name, existing.userId);
-      if (duplicate) {
-        throw new HttpError(400, ERROR_MESSAGES.ACCOUNT_NAME_EXISTS);
-      }
+    // check for duplicates if name is being updated
+    if (updateData.name && updateData.name !== existingAccount.name) {
+      await this.ensureUniqueName(updateData.name, existingAccount.userId, existingAccount.id);
     }
 
     return accountRepository.update(accountId, updateData);
@@ -57,6 +52,14 @@ class AccountService {
     }
 
     return accountRepository.remove(accountId);
+  }
+
+  // utility to check for duplicate account names for a user
+  private async ensureUniqueName(name: string, userId: string, excludeId?: string) {
+    const existingAccount = await accountRepository.findByName(name, userId);
+    if (existingAccount && existingAccount.id !== excludeId) {
+      throw new HttpError(400, ERROR_MESSAGES.ACCOUNT_NAME_EXISTS);
+    }
   }
 }
 
