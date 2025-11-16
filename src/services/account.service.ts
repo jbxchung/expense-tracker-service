@@ -1,6 +1,7 @@
 import { Account } from '@prisma/client';
 import accountRepository from '../repositories/account.repository';
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
+import { HttpError } from '../errors/HttpError';
 
 class AccountService {
     async getAll(): Promise<Account[]> {
@@ -23,7 +24,7 @@ class AccountService {
 
         const existingAccount = await accountRepository.findByName(account.name, account.userId);
         if (existingAccount) {
-            throw new Error('Account with this name already exists under user');
+            throw new HttpError(400, 'Account with this name already exists');
         }
 
         return accountRepository.create(account);
