@@ -13,6 +13,7 @@ model User {
   name        String
   accounts    Account[]
   categories  Category[]
+  plugins     Plugin[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -70,4 +71,17 @@ model Transaction {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Plugin {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  fileExtensions String[]   // e.g., [".csv", ".pdf"]
+  handler     String        // identifier for plugin handler file
+  userId      String?       // null for global plugins
+  user        User?    @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
