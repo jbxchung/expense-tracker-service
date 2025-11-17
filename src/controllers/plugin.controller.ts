@@ -27,11 +27,11 @@ class PluginController {
     const { userId } = req.query;
     const categories = await pluginService.findGlobal() ?? [];
     
-    let message = 'Retrieved all global categories';
+    let message = 'Retrieved all global plugins';
     if (userId) {
       const userCategories = await pluginService.findByUserId(userId as string) ?? [];
       categories?.push(...userCategories);
-      message = `Retrieved all categories for user ${userId}`
+      message = `Retrieved all plugins for user ${userId}`
     }
 
     return { success: true, message, data: categories };

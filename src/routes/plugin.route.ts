@@ -7,9 +7,9 @@ const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.get('/', handle(pluginController.getPlugins));
-router.post('/', handle(pluginController.createPlugin));
-router.patch('/:id', handle(pluginController.updatePlugin));
+router.post('/', upload.single('handlerFile'), handle(pluginController.createPlugin));
+router.patch('/:id', upload.single('handlerFile'), handle(pluginController.updatePlugin));
 router.delete('/:id', handle(pluginController.deletePlugin));
-router.get('/:id/execute', upload.single('file'), handle(pluginController.executePlugin));
+router.get('/:id/execute', upload.single('inputFile'), handle(pluginController.executePlugin));
 
 export default router;

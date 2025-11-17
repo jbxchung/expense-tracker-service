@@ -12,7 +12,7 @@ interface Config {
 const config: Config = {
   port: Number(process.env.PORT) || 3000,
   nodeEnv: process.env.NODE_ENV || 'dev',
-  pluginDir: process.env.PLUGINS_DIR || path.resolve(__dirname, '../plugins'),
+  pluginDir: process.env.PLUGINS_DIR || path.resolve(process.cwd(), 'plugins'),
 };
 
 export default config;

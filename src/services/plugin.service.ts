@@ -63,6 +63,7 @@ class PluginService {
     // create handler file in plugin directory
     const handlerFilePath = path.join(this.pluginDir, `${createdPlugin.id}.ts`);
     fs.writeFileSync(handlerFilePath, handlerFile);
+    console.info(`Saved new plugin with name ${plugin.name} to ${handlerFilePath}`);
 
     return createdPlugin;
   }
