@@ -26,7 +26,7 @@ class CategoryService {
   }
 
   // -----------------
-  // Raw Category APIs
+  // Raw Category CRUD
   // -----------------
 
   async findById(categoryId: string): Promise<Category | null> {

@@ -1,10 +1,13 @@
 import { Request } from 'express';
-import { ApiResponse } from '../types/api-response';
 import { Category } from '@prisma/client';
+
+import { ApiResponse } from '../types/api-response';
+import { CategoryTree } from '../types/category';
+
 import { HttpError } from '../errors/HttpError';
 import categoryService from '../services/category.service';
-import { CategoryTree } from '../types/category';
 import { isCategoryTreeArray } from '../utils/category.util';
+
 
 class CategoryController {
   async getCategoryTree(req: Request): Promise<ApiResponse<CategoryTree[]>> {

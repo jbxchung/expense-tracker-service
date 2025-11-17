@@ -5,6 +5,7 @@ import { errorHandler } from './middlewares/errorHandler';
 
 import accountRoutes from './routes/account.route';
 import categoryRoutes from './routes/category.route';
+import pluginRoutes from './routes/plugin.route';
 import statementRoutes from './routes/statement.route';
 import userRoutes from './routes/user.route';
 
@@ -21,6 +22,7 @@ app.use(accessLog);
 // routes
 app.use('/accounts', accountRoutes);
 app.use('/categories', categoryRoutes);
+app.use('/plugins', pluginRoutes);
 app.use('/statements', statementRoutes);
 app.use('/users', userRoutes);
 

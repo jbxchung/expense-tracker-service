@@ -2,9 +2,9 @@ import { Prisma } from '@prisma/client';
 import { prismaClient } from '../prisma/client';
 import BaseRepository from './base.repository';
 
-class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {
+class PluginRepository extends BaseRepository<Prisma.PluginDelegate> {
   constructor() {
-    super(prismaClient.category);
+    super(prismaClient.plugin);
   }
 
   // find categories with no user id
@@ -26,4 +26,4 @@ class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {
   }
 }
 
-export default new CategoryRepository();
+export default new PluginRepository();

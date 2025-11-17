@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.9.2",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.0",
@@ -37,6 +38,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "multer": "^2.0.2"
   }
 }
