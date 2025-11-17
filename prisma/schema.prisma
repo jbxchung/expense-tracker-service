@@ -78,7 +78,6 @@ model Plugin {
   name        String
   description String?
   fileExtensions String[]   // e.g., [".csv", ".pdf"]
-  handler     String        // identifier for plugin handler file
   userId      String?       // null for global plugins
   user        User?    @relation(fields: [userId], references: [id])
 

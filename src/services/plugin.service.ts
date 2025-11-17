@@ -1,4 +1,7 @@
-import { Plugin, Transaction } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
+import { Plugin } from '@prisma/client';
+import config from '../config/config';
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 import pluginRepository from '../repositories/plugin.repository';
 import { HttpError } from '../errors/HttpError';
@@ -10,20 +13,29 @@ const ERROR_MESSAGES = {
 };
 
 class PluginService {
+  private pluginDir: string = config.pluginDir;
+
+  constructor() {
+    // ensure the plugins directory exists
+    if (!fs.existsSync(this.pluginDir)) {
+      fs.mkdirSync(this.pluginDir, { recursive: true });
+    }
+  }
+
   // run plugin to parse a file and return transaction previews
-  async executePlugin(pluginId: string, fileBuffer: Buffer, accountId: string): Promise<StagedTransaction[]> {
+  async executePlugin(pluginId: string, inputFileBuffer: Buffer, accountId: string): Promise<StagedTransaction[]> {
     const plugin = await pluginRepository.findById(pluginId);
     if (!plugin) throw new HttpError(400, `${ERROR_MESSAGES.ID_NOT_FOUND}${pluginId}`);
 
-    // 1. Run TS/JS handler in sandbox
-    // 2. Or call external service
-    return this.runHandler(plugin.handler, fileBuffer, accountId);
+    // run handler in sandbox
+    const handlerFilePath = path.join(this.pluginDir, `${plugin.id}.ts`);
+    return this.runHandler(handlerFilePath, inputFileBuffer, accountId);
   }
 
   private async runHandler(handlerPath: string, file: Buffer, accountId: string): Promise<StagedTransaction[]> {
     // Example: require local TS file dynamically (needs ts-node/register)
     const handler = await import(handlerPath);
-    return handler.parse(file, accountId); // should return Transaction[]
+    return handler.parse(file, accountId); // should return StagedTransaction[]
   }
 
   // -----------------
@@ -42,13 +54,15 @@ class PluginService {
     return await pluginRepository.findByUserId(userId, includeGlobal);
   }
 
-  async create(plugin: Omit<Plugin, DB_GENERATED_FIELDS>): Promise<Plugin> {
+  async create(plugin: Omit<Plugin, DB_GENERATED_FIELDS>, handlerFile: Buffer): Promise<Plugin> {
     await this.ensureUniqueName(plugin.name, plugin.userId);
 
-    
-    const createdPlugin = pluginRepository.create(plugin);
-    
-    // todo - create file in plugin directory
+    // create plugin record
+    const createdPlugin = await pluginRepository.create(plugin);
+
+    // create handler file in plugin directory
+    const handlerFilePath = path.join(this.pluginDir, `${createdPlugin.id}.ts`);
+    fs.writeFileSync(handlerFilePath, handlerFile);
 
     return createdPlugin;
   }

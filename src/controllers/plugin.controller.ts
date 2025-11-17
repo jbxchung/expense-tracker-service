@@ -11,13 +11,13 @@ class PluginController {
   async executePlugin(req: Request): Promise<ApiResponse<StagedTransaction[]>> {
     const pluginId = req.params.id;
     const { accountId } = req.body;
-    const fileBuffer = req.file?.buffer;
+    const inputFileBuffer = req.file?.buffer;
 
     if (!pluginId) throw new HttpError(400, 'Plugin ID is required');
     if (!accountId) throw new HttpError(400, 'Account ID is required');
-    if (!fileBuffer) throw new HttpError(400, 'No file uploaded');
+    if (!inputFileBuffer) throw new HttpError(400, 'No file to process uploaded');
 
-    const preview = await pluginService.executePlugin(pluginId, fileBuffer, accountId);
+    const preview = await pluginService.executePlugin(pluginId, inputFileBuffer, accountId);
 
     return { success: true, message: 'Plugin executed', data: preview };
   }
@@ -38,9 +38,22 @@ class PluginController {
   };
 
   async createPlugin(req: Request): Promise<ApiResponse<Plugin>> {
-    const { name, description, handler, userId, fileExtensions } = req.body;
-    const newPlugin = await pluginService.create({ name, description, handler, userId, fileExtensions });
-    return { success: true, message: 'Created plugin', data: newPlugin };
+    if (!req.file) {
+      throw new HttpError(400, 'No plugin handler file uploaded');
+    }
+
+    const { name, description, userId, fileExtensions } = req.body;
+
+    if (!name) throw new HttpError(400, 'Plugin name is required');
+
+    const plugin = await pluginService.create({
+      name,
+      description,
+      userId: userId || null,
+      fileExtensions,
+    }, req.file.buffer);
+
+    return { success: true, message: 'Plugin created successfully', data: plugin };
   }
 
   async updatePlugin(req: Request): Promise<ApiResponse<Plugin>> {
