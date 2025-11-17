@@ -67,7 +67,7 @@ class PluginService {
     return createdPlugin;
   }
 
-  async update(pluginId: string, updateData: Partial<Plugin>): Promise<Plugin | undefined> {
+  async update(pluginId: string, updateData: Partial<Plugin>, newHandlerFile?: Buffer): Promise<Plugin | undefined> {
     const existingPlugin = await pluginRepository.findById(pluginId);
     if (!existingPlugin) {
       throw new HttpError(400, `${ERROR_MESSAGES.ID_NOT_FOUND}${pluginId}`);
@@ -78,7 +78,15 @@ class PluginService {
       await this.ensureUniqueName(updateData.name, existingPlugin.userId, existingPlugin.id);
     }
 
-    return pluginRepository.update(pluginId, updateData);
+    const updatedPlugin = await pluginRepository.update(pluginId, updateData)
+
+    // update handler file if provided
+    if (newHandlerFile) {
+      const handlerFilePath = path.join(this.pluginDir, `${pluginId}.ts`);
+      fs.writeFileSync(handlerFilePath, newHandlerFile);
+    }
+
+    return updatedPlugin;
   }
 
   async delete(pluginId: string): Promise<Plugin | undefined> {

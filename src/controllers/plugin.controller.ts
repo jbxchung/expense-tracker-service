@@ -60,8 +60,15 @@ class PluginController {
     const pluginId = req.params.id || '';
     const existing = await pluginService.findById(pluginId);
     if (!existing) throw new HttpError(404, 'Plugin not found');
-
-    const updatedPlugin = await pluginService.update(pluginId, req.body);
+  
+    const { name, description, userId, fileExtensions } = req.body;
+  
+    const updatedPlugin = await pluginService.update(
+      pluginId,
+      { name, description, userId: userId || null, fileExtensions },
+      req.file?.buffer
+    );
+  
     return { success: true, message: 'Updated plugin', data: updatedPlugin };
   }
 
