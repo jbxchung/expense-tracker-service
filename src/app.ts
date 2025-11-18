@@ -6,7 +6,7 @@ import { errorHandler } from './middlewares/errorHandler';
 import accountRoutes from './routes/account.route';
 import categoryRoutes from './routes/category.route';
 import pluginRoutes from './routes/plugin.route';
-import statementRoutes from './routes/statement.route';
+import transactionRoutes from './routes/transaction.route';
 import userRoutes from './routes/user.route';
 
 const app = express();
@@ -23,7 +23,7 @@ app.use(accessLog);
 app.use('/accounts', accountRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/plugins', pluginRoutes);
-app.use('/statements', statementRoutes);
+app.use('/transactions', transactionRoutes);
 app.use('/users', userRoutes);
 
 // global error handler
