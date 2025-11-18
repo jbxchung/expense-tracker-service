@@ -6,26 +6,29 @@ import { HttpError } from '../errors/HttpError';
 
 class TransactionController {
   async getTransactions(req: Request): Promise<ApiResponse<Transaction[]>> {
-    const accountId = req.params.accountId || '';
-    const { from, to } = req.query;
+    const { accountId, from, to } = req.query;
 
     if (!accountId) {
-      throw new HttpError(400, 'accountId is required');
+      throw new HttpError(400, 'At least one accountId is required');
     }
+
+    const accountIds = Array.isArray(accountId) ? accountId : [accountId];
 
     const startDate = from ? new Date(Number(from)) : undefined;
     const endDate = to ? new Date(Number(to)) : undefined;
 
-    const results = await transactionService.findByAccount(accountId as string, startDate, endDate);
+    const results = await Promise.all(accountIds.map(id => (
+      transactionService.findByAccount(id as string, startDate, endDate)
+    )));
 
     return {
       success: true,
-      message: `Retrieved transactions from for account ${accountId} from ${
+      message: `Retrieved transactions from for accounts ${accountIds} from ${
         startDate?.toLocaleString() ?? 'the beginning of Unix time'
       } to ${
         endDate?.toLocaleString() ?? 'now'
       }`,
-      data: results,
+      data: results.flat(),
     };
   };
   
