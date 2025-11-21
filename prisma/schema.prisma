@@ -13,7 +13,7 @@ model User {
   name        String
   accounts    Account[]
   categories  Category[]
-  plugins     Plugin[]
+  importers   Importer[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -73,12 +73,14 @@ model Transaction {
   updatedAt DateTime @updatedAt
 }
 
-model Plugin {
+model Importer {
   id          String   @id @default(uuid())
   name        String
   description String?
   fileExtensions String[]   // e.g., [".csv", ".pdf"]
-  userId      String?       // null for global plugins
+  mapping     Json          // the pipeline JSON (adapter + preprocess + mapping + postprocess)
+
+  userId      String?       // null for global importers
   user        User?    @relation(fields: [userId], references: [id])
 
   createdAt   DateTime @default(now())
