@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import { prismaClient } from '../prisma/client';
 import BaseRepository from './base.repository';
 
-class PluginRepository extends BaseRepository<Prisma.ImporterDelegate> {
+class ImporterRepository extends BaseRepository<Prisma.ImporterDelegate> {
   constructor() {
     super(prismaClient.importer);
   }
@@ -26,4 +26,4 @@ class PluginRepository extends BaseRepository<Prisma.ImporterDelegate> {
   }
 }
 
-export default new PluginRepository();
+export default new ImporterRepository();

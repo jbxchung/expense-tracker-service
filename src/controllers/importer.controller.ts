@@ -65,7 +65,7 @@ class ImporterController {
       { name, description, userId: userId || null, fileExtensions, mapping }
     );
   
-    return { success: true, message: 'Updated plugin', data: updatedImporter };
+    return { success: true, message: 'Updated importer', data: updatedImporter };
   }
 
   async deleteImporter(req: Request): Promise<ApiResponse<Importer>> {

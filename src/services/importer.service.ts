@@ -1,7 +1,4 @@
-import fs from 'fs';
-import path from 'path';
 import { Importer } from '@prisma/client';
-import config from '../config/config';
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 import importerRepository from '../repositories/importer.repository';
 import { HttpError } from '../errors/HttpError';
