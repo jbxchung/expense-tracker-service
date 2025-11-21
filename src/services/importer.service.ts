@@ -66,8 +66,8 @@ class ImporterService {
 
   // utility to check for duplicate importer names within the same scope
   private async ensureUniqueName(name: string, userId?: string | null, excludeId?: string) {
-    const existingPlugin = await importerRepository.findByName(name, userId ?? undefined);
-    if (existingPlugin && existingPlugin.id !== excludeId) {
+    const existingImporter = await importerRepository.findByName(name, userId ?? undefined);
+    if (existingImporter && existingImporter.id !== excludeId) {
       throw new HttpError(400, ERROR_MESSAGES.IMPORTER_NAME_EXISTS);
     }
   }
