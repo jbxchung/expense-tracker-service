@@ -2,17 +2,17 @@ import { Prisma } from '@prisma/client';
 import { prismaClient } from '../prisma/client';
 import BaseRepository from './base.repository';
 
-class PluginRepository extends BaseRepository<Prisma.PluginDelegate> {
+class PluginRepository extends BaseRepository<Prisma.ImporterDelegate> {
   constructor() {
-    super(prismaClient.plugin);
+    super(prismaClient.importer);
   }
 
-  // find categories with no user id
+  // find importers with no user id
   async findGlobal() {
     return this.model.findMany({ where: { userId: null } });
   }
 
-  // find categories scoped to a given user
+  // find importers scoped to a given user
   async findByUserId(userId: string, includeGlobal = false) {
     const where = includeGlobal
     ? { OR: [{ userId }, { userId: null }] }

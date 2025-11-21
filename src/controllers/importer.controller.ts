@@ -1,0 +1,83 @@
+import { Request } from 'express';
+import { Importer } from '@prisma/client';
+
+import { ApiResponse } from '../types/api-response';
+import { StagedTransaction } from '../types/transaction';
+import { HttpError } from '../errors/HttpError';
+
+import importerService from '../services/importer.service';
+
+class ImporterController {
+  async executeImporter(req: Request): Promise<ApiResponse<StagedTransaction[]>> {
+    const importerId = req.params.id;
+    const { accountId } = req.body;
+    const inputFileBuffer = req.file?.buffer;
+
+    if (!importerId) throw new HttpError(400, 'Importer ID is required');
+    if (!accountId) throw new HttpError(400, 'Account ID is required');
+    if (!inputFileBuffer) throw new HttpError(400, 'No file to process uploaded');
+
+    const preview = await importerService.executeImporter(importerId, inputFileBuffer, accountId);
+
+    return { success: true, message: 'Importer executed', data: preview };
+  }
+
+  // return a raw list of the categories for a given user (globals + their own)
+  async getImporters(req: Request): Promise<ApiResponse<Importer[]>> {
+    const { userId } = req.query;
+    const categories = await importerService.findGlobal() ?? [];
+    
+    let message = 'Retrieved all global importers';
+    if (userId) {
+      const userCategories = await importerService.findByUserId(userId as string) ?? [];
+      categories?.push(...userCategories);
+      message = `Retrieved all importers for user ${userId}`
+    }
+
+    return { success: true, message, data: categories };
+  };
+
+  async createImporter(req: Request): Promise<ApiResponse<Importer>> {
+    const { name, description, userId, fileExtensions, mapping } = req.body;
+
+    if (!name) throw new HttpError(400, 'Importer name is required');
+
+    const importer = await importerService.create({
+      name,
+      description,
+      userId: userId || null,
+      fileExtensions,
+      mapping,
+    });
+
+    return { success: true, message: 'Importer created successfully', data: importer };
+  }
+
+  async updateImporter(req: Request): Promise<ApiResponse<Importer>> {
+    const importerId = req.params.id || '';
+    const existing = await importerService.findById(importerId);
+    if (!existing) throw new HttpError(404, 'Importer not found');
+  
+    const { name, description, userId, fileExtensions, mapping } = req.body;
+  
+    const updatedImporter = await importerService.update(
+      importerId,
+      { name, description, userId: userId || null, fileExtensions, mapping }
+    );
+  
+    return { success: true, message: 'Updated plugin', data: updatedImporter };
+  }
+
+  async deleteImporter(req: Request): Promise<ApiResponse<Importer>> {
+    const importerId = req.params.id || '';
+    const existing = await importerService.findById(importerId);
+    if (!existing) {
+      throw new HttpError(404, 'Importer not found');
+    }
+
+    const deletedImporter = await importerService.delete(importerId);
+    return { success: true, message: 'Deleted importer', data: deletedImporter };
+  }
+}
+
+export default new ImporterController();
