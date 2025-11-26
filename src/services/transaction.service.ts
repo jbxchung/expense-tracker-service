@@ -13,10 +13,10 @@ class TransactionService {
     return transactionRepository.findByAccountAndDateRange(accountId, startDate, endDate);
   }
 
-  async bulkInsertFromStaged(stagedTransactions: StagedTransaction[]) {
+  async bulkInsertFromStaged(accountId: string, stagedTransactions: StagedTransaction[]) {
     if (!stagedTransactions || !stagedTransactions.length) return { count: 0 };
     const createInputs = stagedTransactions.map(st => ({
-      accountId: st.accountId,
+      accountId,
       amount: st.amount,
       date: st.date,
       description: st.description,
