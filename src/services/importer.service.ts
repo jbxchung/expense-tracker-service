@@ -11,7 +11,7 @@ const ERROR_MESSAGES = {
 
 class ImporterService {
   // run importer to parse a file and return transaction previews
-  async executeImporter(importerId: string, inputFileBuffer: Buffer, accountId: string): Promise<StagedTransaction[]> {
+  async executeImporter(importerId: string, inputFileBuffer: Buffer): Promise<StagedTransaction[]> {
     const importer = await importerRepository.findById(importerId);
     if (!importer) throw new HttpError(400, `${ERROR_MESSAGES.ID_NOT_FOUND}${importerId}`);
 

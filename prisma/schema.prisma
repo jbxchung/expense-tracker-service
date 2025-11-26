@@ -73,11 +73,15 @@ model Transaction {
   updatedAt DateTime @updatedAt
 }
 
+enum ImporterType {
+  CSV
+}
+
 model Importer {
   id          String   @id @default(uuid())
   name        String
   description String?
-  fileExtensions String[]   // e.g., [".csv", ".pdf"]
+  type        ImporterType
   mapping     Json          // the pipeline JSON (adapter + preprocess + mapping + postprocess)
 
   userId      String?       // null for global importers

@@ -10,14 +10,12 @@ import importerService from '../services/importer.service';
 class ImporterController {
   async executeImporter(req: Request): Promise<ApiResponse<StagedTransaction[]>> {
     const importerId = req.params.id;
-    const { accountId } = req.body;
     const inputFileBuffer = req.file?.buffer;
 
     if (!importerId) throw new HttpError(400, 'Importer ID is required');
-    if (!accountId) throw new HttpError(400, 'Account ID is required');
     if (!inputFileBuffer) throw new HttpError(400, 'No file to process uploaded');
 
-    const preview = await importerService.executeImporter(importerId, inputFileBuffer, accountId);
+    const preview = await importerService.executeImporter(importerId, inputFileBuffer);
 
     return { success: true, message: 'Importer executed', data: preview };
   }
@@ -38,7 +36,7 @@ class ImporterController {
   };
 
   async createImporter(req: Request): Promise<ApiResponse<Importer>> {
-    const { name, description, userId, fileExtensions, mapping } = req.body;
+    const { name, description, userId, type, mapping } = req.body;
 
     if (!name) throw new HttpError(400, 'Importer name is required');
 
@@ -46,7 +44,7 @@ class ImporterController {
       name,
       description,
       userId: userId || null,
-      fileExtensions,
+      type,
       mapping,
     });
 
@@ -58,11 +56,11 @@ class ImporterController {
     const existing = await importerService.findById(importerId);
     if (!existing) throw new HttpError(404, 'Importer not found');
   
-    const { name, description, userId, fileExtensions, mapping } = req.body;
+    const { name, description, userId, type, mapping } = req.body;
   
     const updatedImporter = await importerService.update(
       importerId,
-      { name, description, userId: userId || null, fileExtensions, mapping }
+      { name, description, userId: userId || null, type, mapping }
     );
   
     return { success: true, message: 'Updated importer', data: updatedImporter };
