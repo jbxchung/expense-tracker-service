@@ -2,7 +2,7 @@ import { Transaction } from '@prisma/client';
 import transactionRepository from '../repositories/transaction.repository';
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 import { HttpError } from '../errors/HttpError';
-import { StagedTransaction } from '../types/transaction';
+import { TransactionCreateInput } from '../types/transaction';
 
 const ERROR_MESSAGES = {
     ID_NOT_FOUND: 'Could not find transaction with given id: ',
@@ -13,9 +13,9 @@ class TransactionService {
     return transactionRepository.findByAccountAndDateRange(accountId, startDate, endDate);
   }
 
-  async bulkInsertFromStaged(accountId: string, stagedTransactions: StagedTransaction[]) {
-    if (!stagedTransactions || !stagedTransactions.length) return { count: 0 };
-    const createInputs = stagedTransactions.map(st => ({
+  async bulkInsertFromStaged(accountId: string, inputTransactions: TransactionCreateInput[]) {
+    if (!inputTransactions || !inputTransactions.length) return { count: 0 };
+    const createInputs = inputTransactions.map(st => ({
       accountId,
       amount: st.amount,
       date: st.date,

@@ -1,8 +1,13 @@
 import { Importer } from '@prisma/client';
+
+import { HttpError } from '../errors/HttpError';
+
 import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 import importerRepository from '../repositories/importer.repository';
-import { HttpError } from '../errors/HttpError';
+
 import { StagedTransaction } from '../types/transaction';
+
+import { getEngine } from '../engines/engine';
 
 const ERROR_MESSAGES = {
   ID_NOT_FOUND: 'Could not find importer with given id: ',
@@ -15,8 +20,8 @@ class ImporterService {
     const importer = await importerRepository.findById(importerId);
     if (!importer) throw new HttpError(400, `${ERROR_MESSAGES.ID_NOT_FOUND}${importerId}`);
 
-    // TODO - execute the importer
-    throw new Error('Importer execution not yet implemented');
+    const engine = getEngine(importer);
+    return engine.run(inputFileBuffer, importer);
   }
 
   // -----------------
