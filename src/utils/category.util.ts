@@ -35,7 +35,27 @@ export function buildCategoryTree(categories: Category[]): CategoryTree[] {
     : tree.push(node);
   }
 
-  return tree;
+  return sortCategoryTree(tree);
+}
+
+function sortCategoryTree(categoryTree: CategoryTree[]): CategoryTree[] {
+  // sort this layer by sortOrder with fallback on name
+  categoryTree.sort((a, b) => {
+    if (a.sortOrder !== b.sortOrder) {
+      return a.sortOrder - b.sortOrder;
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+
+  // recursively sort children
+  for (const node of categoryTree) {
+    if (node.children.length > 0) {
+      sortCategoryTree(node.children);
+    }
+  }
+
+  return categoryTree;
 }
 
 // traverse and upsert categories with existing map
