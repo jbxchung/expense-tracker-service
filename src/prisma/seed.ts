@@ -1,3 +1,4 @@
+import { Category } from '@prisma/client';
 import { prismaClient}  from './client';
 
 
@@ -26,11 +27,11 @@ async function seedCategories() {
     return;
   } else {
     const categories = [
-      { name: 'Food', description: 'Expenses for food and dining', userId: null },
-      { name: 'Transportation', description: 'Expenses for transportation and travel', userId: null },
-      { name: 'Utilities', description: 'Expenses for utilities like electricity, water, etc.', userId: null },
-      { name: 'Entertainment', description: 'Expenses for entertainment and leisure activities', userId: null },
-      { name: 'Health', description: 'Expenses for health and medical needs', userId: null },
+      { name: 'Food', description: 'Expenses for food and dining', sortOrder: 0, userId: null },
+      { name: 'Transportation', description: 'Expenses for transportation and travel', sortOrder: 1, userId: null },
+      { name: 'Utilities', description: 'Expenses for utilities like electricity, water, etc.', sortOrder: 2, userId: null },
+      { name: 'Entertainment', description: 'Expenses for entertainment and leisure activities', sortOrder: 3, userId: null },
+      { name: 'Health', description: 'Expenses for health and medical needs', sortOrder: 4, userId: null },
     ];
 
     for (const category of categories) {

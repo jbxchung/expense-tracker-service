@@ -51,8 +51,8 @@ class CategoryController {
   };
 
   async createCategory(req: Request): Promise<ApiResponse<Category>> {
-    const { name, description, userId, parentId } = req.body;
-    const newCategory: Category = await categoryService.create({ name, description, userId, parentId });
+    const { name, description, userId, sortOrder, parentId } = req.body;
+    const newCategory: Category = await categoryService.create({ name, description, userId, sortOrder, parentId });
     return { success: true, message: 'Created category', data: newCategory };
   };
 
