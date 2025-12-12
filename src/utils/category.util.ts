@@ -22,12 +22,11 @@ export function isCategoryTreeArray(obj: any): obj is CategoryTree[] {
 
 // build a tree from flat categories
 export function buildCategoryTree(categories: Category[]): CategoryTree[] {
-  const categoryMap = new Map<string, CategoryTree>();
+  const categoryMap = new Map<string, CategoryTree>(categories.map(c => [c.id, { ...c, children: [] }]));
   const tree: CategoryTree[] = [];
 
   for (const category of categories) {
-    const node: CategoryTree = { ...category, children: [] };
-    categoryMap.set(category.id, node);
+    const node = categoryMap.get(category.id)!;
 
     // append to parent if it exists, otherwise its a root category
     category.parentId
@@ -51,7 +50,7 @@ function sortCategoryTree(categoryTree: CategoryTree[]): CategoryTree[] {
   // recursively sort children
   for (const node of categoryTree) {
     if (node.children.length > 0) {
-      sortCategoryTree(node.children);
+      node.children = sortCategoryTree(node.children);
     }
   }
 
