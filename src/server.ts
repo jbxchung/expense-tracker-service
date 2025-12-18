@@ -5,8 +5,12 @@ import config from './config/config';
   try {
     // todo - any initialization here
 
-    app.listen(config.port, () => {
+    const server = app.listen(config.port, () => {
       console.log(`Server running on port ${config.port}`);
+    });
+
+    server.on('error', (err: any) => {
+      console.error('HTTP server error:', err);
     });
   } catch (e) {
     console.error('Failed to start', e);

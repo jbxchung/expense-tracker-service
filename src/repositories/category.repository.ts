@@ -18,7 +18,14 @@ class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {
     ? { OR: [{ userId }, { userId: null }] }
     : { userId };
 
-    return this.model.findMany({ where });
+    return this.model.findMany({
+      where,
+      include: {
+        _count: {
+          select: { transactions: true },
+        }
+      }
+    });
   }
 
   async findByName(name: string, userId?: string) {
