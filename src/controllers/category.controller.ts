@@ -31,7 +31,7 @@ class CategoryController {
     }
 
     const categoryTree = await categoryService.saveCategoryTree(userId as string, req.body);
-    return { success: true, message: `Retrieved category tree for user ${userId}`, data: categoryTree };
+    return { success: true, message: `Saved category tree for user ${userId}`, data: categoryTree };
   }
 
 
