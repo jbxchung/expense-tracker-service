@@ -18,7 +18,7 @@ class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {
     ? { OR: [{ userId }, { userId: null }] }
     : { userId };
 
-    return this.model.findMany({
+    const rows = await this.model.findMany({
       where,
       include: {
         _count: {
@@ -26,6 +26,12 @@ class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {
         }
       }
     });
+
+    // return categories with an extra transactionCount field instead of the _count object
+    return rows.map(({ _count, ...category }) => ({
+      ...category,
+      transactionCount: _count.transactions,
+    }));
   }
 
   async findByName(name: string, userId?: string) {
