@@ -23,9 +23,11 @@ class CategoryService {
 
     const seenIds = new Set(flatCategories.map(c => c.id));
     
-    // todo - delete categories that were not seen
+    // delete categories that are no longer in the tree
     const categoriesToDelete = existingCategories.filter(c => !seenIds.has(c.id));
-    console.log('TODO: delete categories', categoriesToDelete);
+    for (const delCategory of categoriesToDelete) {
+      await categoryRepository.deleteById(delCategory.id);
+    }
 
     // rebuild the tree to return the updated structure
     return buildCategoryTree(flatCategories);
