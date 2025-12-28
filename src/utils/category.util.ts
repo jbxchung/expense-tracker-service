@@ -62,11 +62,12 @@ export async function traverseAndUpsertCategories(
   nodes: CategoryTree[],
   parentId: string | null,
   existingMap: Map<string, Category>,
+  userId: string,
 ): Promise<Category[]> {
   const results: Category[] = [];
 
   for (const node of nodes) {
-    const { id, name, description, sortOrder, userId, children } = node;
+    const { id, name, description, sortOrder, children } = node;
 
     let savedCategory: Category;
 
@@ -79,7 +80,7 @@ export async function traverseAndUpsertCategories(
     results.push(savedCategory);
 
     if (children?.length) {
-      const childResults = await traverseAndUpsertCategories(children, savedCategory.id, existingMap);
+      const childResults = await traverseAndUpsertCategories(children, savedCategory.id, existingMap, userId);
       results.push(...childResults);
     }
   }

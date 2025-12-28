@@ -19,7 +19,7 @@ class CategoryService {
     const existingMap = new Map(existingCategories.map(cat => [cat.id, cat]));
 
     // walk the tree and upsert categories
-    const flatCategories = await traverseAndUpsertCategories(tree, null, existingMap);
+    const flatCategories = await traverseAndUpsertCategories(tree, null, existingMap, userId);
 
     const seenIds = new Set(flatCategories.map(c => c.id));
     
