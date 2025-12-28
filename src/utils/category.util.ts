@@ -61,7 +61,7 @@ function sortCategoryTree(categoryTree: CategoryTree[]): CategoryTree[] {
 export async function traverseAndUpsertCategories(
   nodes: CategoryTree[],
   parentId: string | null,
-  existingMap: Map<string, Category>
+  existingMap: Map<string, Category>,
 ): Promise<Category[]> {
   const results: Category[] = [];
 
@@ -71,10 +71,8 @@ export async function traverseAndUpsertCategories(
     let savedCategory: Category;
 
     if (id && existingMap.has(id)) {
-      // update existing category
       savedCategory = await categoryRepository.update(id, { name, description, parentId, sortOrder, userId });
     } else {
-      // create new category
       savedCategory = await categoryRepository.create({ name, description, parentId, sortOrder, userId });
     }
 

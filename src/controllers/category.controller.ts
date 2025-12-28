@@ -38,10 +38,13 @@ class CategoryController {
   // return a raw list of the categories for a given user (globals + their own)
   async getCategories(req: Request): Promise<ApiResponse<Category[]>> {
     const { userId } = req.query;
-    const categories = await categoryService.findGlobal() ?? [];
-    
-    let message = 'Retrieved all global categories';
-    if (userId) {
+    let categories: Category[] = [];
+    let message = '';
+
+    if (!userId) {
+      categories = await categoryService.findGlobal() ?? [];
+      message = 'Retrieved all global categories';
+    } else {
       const userCategories = await categoryService.findByUserId(userId as string) ?? [];
       categories?.push(...userCategories);
       message = `Retrieved all categories for user ${userId}`

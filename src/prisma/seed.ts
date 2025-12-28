@@ -1,49 +1,42 @@
-import { Category } from '@prisma/client';
+import categoryService from '../services/category.service';
+import userService from '../services/user.service';
 import { prismaClient}  from './client';
 
+async function seedCategories() {
+  const existingCategories = await categoryService.findGlobal();
+  if (existingCategories.length > 0) {
+    console.log('Default categories already exist, skipping seeding.');
+    return;
+  } else {
+    const categories = [
+      { name: 'Food', description: 'Expenses for food and dining', sortOrder: 0, parentId: null, userId: null },
+      { name: 'Transportation', description: 'Expenses for transportation and travel', sortOrder: 1, parentId: null, userId: null },
+      { name: 'Utilities', description: 'Expenses for utilities like electricity, water, etc.', sortOrder: 2, parentId: null, userId: null },
+      { name: 'Entertainment', description: 'Expenses for entertainment and leisure activities', sortOrder: 3, parentId: null, userId: null },
+      { name: 'Health', description: 'Expenses for health and medical needs', sortOrder: 4, parentId: null, userId: null },
+    ];
+
+    for (const category of categories) {
+      await categoryService.create(category);
+    }
+    console.log('Seed categories created');
+  }
+}
 
 async function seedUser() {
-  const existing = await prismaClient.user.findUnique({
-    where: { email: 'brandon@jbxchung.dev' },
-  });
-
+  const existing = await userService.findByEmail('brandon@jbxchung.dev');
+  
   if (!existing) {
-    await prismaClient.user.create({
-      data: {
-        email: 'brandon@jbxchung.dev',
-        name: 'Brandon'
-      },
-    });
+    await userService.create({ name: 'Brandon', email: 'brandon@jbxchung.dev'});
     console.log('Seed user created');
   } else {
     console.log('Seed user already exists');
   }
 }
 
-async function seedCategories() {
-  const existingCategories = await prismaClient.category.findMany();
-  if (existingCategories.length > 0) {
-    console.log('Categories already exist, skipping seeding.');
-    return;
-  } else {
-    const categories = [
-      { name: 'Food', description: 'Expenses for food and dining', sortOrder: 0, userId: null },
-      { name: 'Transportation', description: 'Expenses for transportation and travel', sortOrder: 1, userId: null },
-      { name: 'Utilities', description: 'Expenses for utilities like electricity, water, etc.', sortOrder: 2, userId: null },
-      { name: 'Entertainment', description: 'Expenses for entertainment and leisure activities', sortOrder: 3, userId: null },
-      { name: 'Health', description: 'Expenses for health and medical needs', sortOrder: 4, userId: null },
-    ];
-
-    for (const category of categories) {
-      await prismaClient.category.create({ data: category });
-    }
-    console.log('Seed categories created');
-  }
-}
-
 async function main() {
-  await seedUser();
   await seedCategories();
+  await seedUser();
 }
 
 main().catch((e) => {

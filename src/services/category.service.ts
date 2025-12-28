@@ -7,7 +7,7 @@ import { buildCategoryTree, traverseAndUpsertCategories } from '../utils/categor
 class CategoryService {
   // return categories for a given user (globals + their own) as a tree structure
   async getCategoryTree(userId: string): Promise<CategoryTree[]> {
-    const categories = await categoryRepository.findByUserId(userId, true);
+    const categories = await categoryRepository.findByUserId(userId);
 
     return buildCategoryTree(categories);
   }
@@ -15,11 +15,17 @@ class CategoryService {
   // flatten a nested category tree and upserts categories
   async saveCategoryTree(userId: string, tree: CategoryTree[]): Promise<CategoryTree[]> {
     // get all existing categories up front to reduce db calls
-    const existingCategories = await categoryRepository.findByUserId(userId, true);
+    const existingCategories = await categoryRepository.findByUserId(userId);
     const existingMap = new Map(existingCategories.map(cat => [cat.id, cat]));
 
     // walk the tree and upsert categories
     const flatCategories = await traverseAndUpsertCategories(tree, null, existingMap);
+
+    const seenIds = new Set(flatCategories.map(c => c.id));
+    
+    // todo - delete categories that were not seen
+    const categoriesToDelete = existingCategories.filter(c => !seenIds.has(c.id));
+    console.log('TODO: delete categories', categoriesToDelete);
 
     // rebuild the tree to return the updated structure
     return buildCategoryTree(flatCategories);
@@ -33,16 +39,16 @@ class CategoryService {
     return categoryRepository.findById(categoryId);
   }
 
-  async findGlobal(): Promise<Category[] | null> {
-    return categoryRepository.findGlobal();
+  async findGlobal(): Promise<Category[]> {
+    return categoryRepository.findDefaults();
   }
 
-  async findByUserId(userId: string): Promise<Category[] | null> {
+  async findByUserId(userId: string): Promise<Category[]> {
     return categoryRepository.findByUserId(userId);
   }
 
   async create(category: Omit<Category, DB_GENERATED_FIELDS>): Promise<Category> {
-    const existingCategory = await categoryRepository.findByName(category.name, category.userId ?? undefined);
+    const existingCategory = await categoryRepository.findByName(category.name, category.userId);
     if (existingCategory) {
       throw new Error('Category with this name already exists');
     }

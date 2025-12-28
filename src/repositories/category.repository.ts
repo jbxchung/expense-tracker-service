@@ -8,18 +8,14 @@ class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {
   }
 
   // find categories with no user id
-  async findGlobal() {
+  async findDefaults() {
     return this.model.findMany({ where: { userId: null } });
   }
 
   // find categories scoped to a given user
-  async findByUserId(userId: string, includeGlobal = false) {
-    const where = includeGlobal
-    ? { OR: [{ userId }, { userId: null }] }
-    : { userId };
-
+  async findByUserId(userId: string) {
     const rows = await this.model.findMany({
-      where,
+      where: { userId },
       include: {
         _count: {
           select: { transactions: true },
@@ -34,8 +30,14 @@ class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {
     }));
   }
 
-  async findByName(name: string, userId?: string) {
-    return this.model.findFirst({ where: { name, userId: userId || null } });
+  async findByName(name: string, userId: string | null) {
+    return this.model.findFirst({ where: { name, userId } });
+  }
+
+  async deleteById(categoryId: string) {
+    return this.model.delete({
+      where: { id: categoryId },
+    });
   }
 }
 
