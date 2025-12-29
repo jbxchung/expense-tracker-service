@@ -21,8 +21,10 @@
   },
   "homepage": "https://github.com/jbxchung/expense-tracker-service#readme",
   "devDependencies": {
+    "@types/connect-pg-simple": "^7.0.3",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "@types/express-session": "^1.18.2",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.9.2",
     "dotenv": "^17.2.3",
