@@ -8,14 +8,16 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  name        String
-  accounts    Account[]
-  categories  Category[]
-  importers   Importer[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String
+
+  passwordHash  String?   // nullable for now until existing users all have a password set
+  accounts      Account[]
+  categories    Category[]
+  importers     Importer[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum AccountType {
