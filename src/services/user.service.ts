@@ -1,7 +1,12 @@
+import bcrypt from 'bcrypt';
 import { User, UserRole } from '@prisma/client';
+
+import config from '../config/config';
+
 import userRepository from '../repositories/user.repository';
-import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 import categoryService from './category.service';
+import { CreateUserDto } from '../dto/user.dto';
+import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 
 class UserService {
   async getAll(): Promise<User[]> {
@@ -9,10 +14,24 @@ class UserService {
   }
 
   // create new user and assign default categories
-  async create(newUser: Omit<User, DB_GENERATED_FIELDS>) {
+  async create(newUserDto: CreateUserDto) {
     const isFirstUser = await userRepository.getCount() === 0;
-    newUser.role = isFirstUser ? UserRole.OWNER : UserRole.USER;
+    let userRole = newUserDto.role;
+    if (isFirstUser) {
+      // first user must be OWNER
+      userRole = UserRole.OWNER;
+    } else if (!newUserDto.role) {
+      // default to USER if not specified
+      userRole = UserRole.USER;
+    }
 
+    const passwordHash = await bcrypt.hash(newUserDto.password, config.bcryptSaltRounds);
+    const newUser: Omit<User, DB_GENERATED_FIELDS> = {
+      name: newUserDto.name,
+      email: newUserDto.email,
+      passwordHash,
+      role: userRole!,
+    }
     const createdUser = await userRepository.create(newUser);
 
     // todo - extract category initialization

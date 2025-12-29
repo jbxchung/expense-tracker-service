@@ -14,6 +14,10 @@ class UserRepository extends BaseRepository<Prisma.UserDelegate> {
   async findByName(name: string) {
     return this.model.findMany({ where: { name: name } });
   }
+
+  async getCount() {
+    return this.model.count();
+  }
 }
 
 export default new UserRepository();
