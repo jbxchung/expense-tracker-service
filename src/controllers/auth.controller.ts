@@ -52,6 +52,23 @@ class AuthController {
       data: null,
     }
   }
+
+  async getSession(req: Request): Promise<ApiResponse<UserDto | null>> {
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return { success: false, message: 'Not logged in', data: null };
+    }
+
+    // user no longer exists, clear session
+    const user = await userService.findById(userId);
+    if (!user) {
+      req.session.destroy(err => {});
+      return { success: false, message: 'Not logged in', data: null };
+    }
+
+    return { success: true, message: 'Session data retrieve', data: user };
+  }
 }
 
 export default new AuthController();
