@@ -1,9 +1,10 @@
 import app from './app';
+import appBootstrap from './bootstrap/app.bootstrap';
 import config from './config/config';
 
-(async function bootstrap() {
+(async function start() {
   try {
-    // todo - any initialization here
+    await appBootstrap.run();
 
     const server = app.listen(config.port, () => {
       console.log(`Server running on port ${config.port}`);

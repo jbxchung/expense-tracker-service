@@ -5,7 +5,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2023"],                     // Use modern built-in types
-    "types": ["node"],                     // Include Node.js type definitions
+    "types": ["node", "express", "express-session"],
+    "typeRoots": ["./src/types", "./node_modules/@types"],
     "allowSyntheticDefaultImports": true,  // Allow `import express from "express"`
     "esModuleInterop": true,               // Interop for CommonJS modules
     "forceConsistentCasingInFileNames": true,

@@ -74,6 +74,28 @@ class CategoryService {
 
     return categoryRepository.remove(categoryId);
   }
+
+  // bootstrap
+  async createGlobalDefaults() {
+    const existingCategories = await this.findGlobal();
+    if (existingCategories.length > 0) {
+      console.log('Default categories already exist, skipping seeding.');
+      return;
+    } else {
+      const categories = [
+        { name: 'Food', description: 'Expenses for food and dining', sortOrder: 0, parentId: null, userId: null },
+        { name: 'Transportation', description: 'Expenses for transportation and travel', sortOrder: 1, parentId: null, userId: null },
+        { name: 'Utilities', description: 'Expenses for utilities like electricity, water, etc.', sortOrder: 2, parentId: null, userId: null },
+        { name: 'Entertainment', description: 'Expenses for entertainment and leisure activities', sortOrder: 3, parentId: null, userId: null },
+        { name: 'Health', description: 'Expenses for health and medical needs', sortOrder: 4, parentId: null, userId: null },
+      ];
+
+      for (const category of categories) {
+        await this.create(category);
+      }
+      console.log('Seed categories created');
+    }
+  }
 }
 
 export default new CategoryService();

@@ -11,13 +11,18 @@ model User {
   id            String   @id @default(uuid())
   email         String   @unique
   name          String
-
+  role          UserRole
   passwordHash  String?   // nullable for now until existing users all have a password set
   accounts      Account[]
   categories    Category[]
   importers     Importer[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+enum UserRole {
+  OWNER
+  USER
 }
 
 enum AccountType {
