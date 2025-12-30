@@ -27,7 +27,7 @@ class AuthController {
 
     await saveSession(req, user);
 
-    return { success: true, message: 'Signup successful', data: user };
+    return { success: true, message: 'Signup successful', data: user, redirectTo: '/' };
   }
 
   async login(req: Request): Promise<ApiResponse<User>> {
@@ -45,7 +45,7 @@ class AuthController {
 
     await saveSession(req, user);
 
-    return { success: true, message: 'Login successful', data: user };
+    return { success: true, message: 'Login successful', data: user, redirectTo: '/' };
   }
 
   async logout(req: Request): Promise<ApiResponse<null>> {
@@ -59,20 +59,7 @@ class AuthController {
   }
 
   async getSession(req: Request): Promise<ApiResponse<UserDto | null>> {
-    const userId = req.session.userId;
-
-    if (!userId) {
-      return { success: false, message: 'Not logged in', data: null };
-    }
-
-    // user no longer exists, clear session
-    const user = await userService.findById(userId);
-    if (!user) {
-      req.session.destroy(err => {});
-      return { success: false, message: 'Not logged in', data: null };
-    }
-
-    return { success: true, message: 'Session data retrieve', data: user };
+    return { success: true, message: 'Session data retrieved', data: req.user };
   }
 }
 

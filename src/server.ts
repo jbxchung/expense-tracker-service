@@ -5,7 +5,9 @@ import config from './config/config';
 
 (async function start() {
   try {
+    console.log(`Starting service with env: ${process.env.NODE_ENV}`);
     await appBootstrap.run();
+    console.log('Bootstrap completed');
 
     const server = app.listen(config.port, () => {
       console.log(`Server running on port ${config.port}`);
