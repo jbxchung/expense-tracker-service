@@ -7,7 +7,6 @@ export async function requireAuth(
   next: NextFunction
 ) {
   const userId = req.session.userId;
-  console.warn('auth middleware res.session.userId:', userId);
 
   if (!userId) {
     return res.status(401).json({

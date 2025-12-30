@@ -24,7 +24,7 @@ class AuthController {
       return { success: false, message: 'User with this email already exists', data: null };
     }
 
-    if (validatePassword(password)) {
+    if (!validatePassword(password)) {
       throw new HttpError(400, 'Password requirements not met');
     }
 
