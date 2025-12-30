@@ -5,14 +5,19 @@ import { User } from '@prisma/client';
 import userService from '../services/user.service';
 import { ApiResponse } from '../types/api-response';
 import { HttpError } from '../errors/HttpError';
-import { destroySession } from '../utils/session.util';
+import { destroySession, saveSession } from '../utils/session.util';
 import { CreateUserDto, UserDto } from '../dto/user.dto';
 
 class AuthController {
   static readonly INVALID_CREDENTIALS = 'Invalid credentials';
 
-  async signup(req: Request): Promise<ApiResponse<UserDto>> {
+  async signup(req: Request): Promise<ApiResponse<UserDto | null>> {
     const { name, email, password } = req.body as CreateUserDto;
+
+    const existingUser = await userService.findByEmail(email);
+    if (existingUser) {
+      return { success: false, message: 'User with this email already exists', data: null };
+    }
 
     const user = await userService.create({
       name,
@@ -20,7 +25,7 @@ class AuthController {
       password
     });
 
-    req.session.userId = user.id;
+    await saveSession(req, user);
 
     return { success: true, message: 'Signup successful', data: user };
   }
@@ -38,7 +43,7 @@ class AuthController {
       throw new HttpError(401, AuthController.INVALID_CREDENTIALS);
     }
 
-    req.session.userId = user.id;
+    await saveSession(req, user);
 
     return { success: true, message: 'Login successful', data: user };
   }

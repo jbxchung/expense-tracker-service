@@ -52,7 +52,7 @@ class CategoryService {
   async create(category: Omit<Category, DB_GENERATED_FIELDS>): Promise<Category> {
     const existingCategory = await categoryRepository.findByName(category.name, category.userId);
     if (existingCategory) {
-      throw new Error('Category with this name already exists');
+      throw new Error('Category with this name already exists for user ' + category.userId);
     }
     return categoryRepository.create(category);
   }

@@ -37,8 +37,9 @@ class UserService {
     // todo - extract category initialization
     const globalCategories = await categoryService.findGlobal();
     for (const category of globalCategories) {
+      const { id, createdAt, updatedAt, ...rest } = category;
       await categoryService.create({
-        ...category,
+        ...rest,
         userId: createdUser.id,
       })
     }
