@@ -55,7 +55,8 @@ class AuthController {
       success: true,
       message: 'Logged out',
       data: null,
-    }
+      redirectTo: '/login'
+    };
   }
 
   async getSession(req: Request): Promise<ApiResponse<UserDto | null>> {
