@@ -6,7 +6,7 @@ import { HttpError } from '../errors/HttpError';
 
 class AccountController {
   async getAccounts(req: Request): Promise<ApiResponse<Account[]>> {
-    const { userId } = req.query;
+    const { userId } = req.session;
     const accounts = userId
       ? await accountService.findByUserId(userId as string) || []
       : await accountService.getAll();

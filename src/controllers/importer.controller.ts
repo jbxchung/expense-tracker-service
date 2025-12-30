@@ -20,9 +20,9 @@ class ImporterController {
     return { success: true, message: 'Importer executed', data: preview };
   }
 
-  // return a raw list of the categories for a given user (globals + their own)
+  // return a raw list of the importers for a given user (globals + their own)
   async getImporters(req: Request): Promise<ApiResponse<Importer[]>> {
-    const { userId } = req.query;
+    const { userId } = req.session;
     const categories = await importerService.findGlobal() ?? [];
     
     let message = 'Retrieved all global importers';

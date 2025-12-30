@@ -11,33 +11,27 @@ import { isCategoryTreeArray } from '../utils/category.util';
 
 class CategoryController {
   async getCategoryTree(req: Request): Promise<ApiResponse<CategoryTree[]>> {
-    const { userId } = req.query;
-    if (!userId) {
-      throw new HttpError(400, 'userId query parameter is required');
-    }
+    const { userId } = req.session; // endpoint is behind auth, userId must exist
 
-    const categoryTree = await categoryService.getCategoryTree(userId as string);
+    const categoryTree = await categoryService.getCategoryTree(userId!);
     return { success: true, message: `Retrieved category tree for user ${userId}`, data: categoryTree };
   }
 
   async saveCategoryTree(req: Request): Promise<ApiResponse<CategoryTree[]>> {
-    const { userId } = req.query;
-    if (!userId) {
-      throw new HttpError(400, 'userId query parameter is required');
-    }
+    const { userId } = req.session;
 
     if (!isCategoryTreeArray(req.body)) {
       throw new HttpError(400, 'Invalid category tree format');
     }
 
-    const categoryTree = await categoryService.saveCategoryTree(userId as string, req.body);
+    const categoryTree = await categoryService.saveCategoryTree(userId!, req.body);
     return { success: true, message: `Saved category tree for user ${userId}`, data: categoryTree };
   }
 
 
   // return a raw list of the categories for a given user (globals + their own)
   async getCategories(req: Request): Promise<ApiResponse<Category[]>> {
-    const { userId } = req.query;
+    const { userId } = req.session;
     let categories: Category[] = [];
     let message = '';
 
