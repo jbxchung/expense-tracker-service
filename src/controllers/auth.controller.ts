@@ -7,6 +7,7 @@ import { ApiResponse } from '../types/api-response';
 import { HttpError } from '../errors/HttpError';
 import { destroySession, saveSession } from '../utils/session.util';
 import { CreateUserDto, UserDto } from '../dto/user.dto';
+import { validatePassword } from '../utils/password.util';
 
 class AuthController {
   static readonly INVALID_CREDENTIALS = 'Invalid credentials';
@@ -14,9 +15,17 @@ class AuthController {
   async signup(req: Request): Promise<ApiResponse<UserDto | null>> {
     const { name, email, password } = req.body as CreateUserDto;
 
+    if (!name) {
+      throw new HttpError(400, 'Name is required');
+    }
+
     const existingUser = await userService.findByEmail(email);
     if (existingUser) {
       return { success: false, message: 'User with this email already exists', data: null };
+    }
+
+    if (validatePassword(password)) {
+      throw new HttpError(400, 'Password requirements not met');
     }
 
     const user = await userService.create({
