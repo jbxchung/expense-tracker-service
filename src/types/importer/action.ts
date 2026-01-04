@@ -5,7 +5,6 @@ export enum FieldActionType {
 }
 
 export enum TransformType {
-  Negate = 'negate',
   ParseDate = 'parseDate',
   Trim = 'trim',
   Uppercase = 'uppercase',

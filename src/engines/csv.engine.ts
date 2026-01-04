@@ -100,14 +100,17 @@ export class CsvImportEngine implements ImportEngine {
 
         if (action.transform) {
           switch (action.transform) {
-            case TransformType.Negate:
-              return -parseFloat(val);
             case TransformType.ParseDate:
               return new Date(val);
             case TransformType.Trim:
               return val.trim();
             case TransformType.Uppercase:
               return val.toUpperCase();
+            case TransformType.Lowercase:
+              return val.toLowerCase();
+            default:
+              console.warn('Unknown transform type, will return raw value with no-op:', action.transform);
+              return val;
           }
         }
         return val;
