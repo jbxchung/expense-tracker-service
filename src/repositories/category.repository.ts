@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { prismaClient } from '../prisma/client';
+import { prismaClient } from 'prisma/client';
 import BaseRepository from './base.repository';
 
 class CategoryRepository extends BaseRepository<Prisma.CategoryDelegate> {

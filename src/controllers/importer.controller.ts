@@ -1,11 +1,11 @@
 import { Request } from 'express';
 import { Importer } from '@prisma/client';
 
-import { ApiResponse } from '../types/api-response';
-import { StagedTransaction } from '../types/transaction';
-import { HttpError } from '../errors/HttpError';
+import { HttpError } from 'errors/HttpError';
+import { ApiResponse } from 'types/api-response';
+import { StagedTransaction } from 'types/transaction';
 
-import importerService from '../services/importer.service';
+import importerService from 'services/importer.service';
 
 class ImporterController {
   async executeImporter(req: Request): Promise<ApiResponse<StagedTransaction[]>> {

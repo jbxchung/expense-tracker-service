@@ -1,8 +1,8 @@
 import { Category } from '@prisma/client';
-import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
-import categoryRepository from '../repositories/category.repository';
-import { CategoryTree } from '../types/category';
-import { buildCategoryTree, traverseAndUpsertCategories } from '../utils/category.util';
+import { DB_GENERATED_FIELDS } from 'repositories/base.repository';
+import categoryRepository from 'repositories/category.repository';
+import { CategoryTree } from 'types/category';
+import { buildCategoryTree, traverseAndUpsertCategories } from 'utils/category.util';
 
 class CategoryService {
   // return categories for a given user (globals + their own) as a tree structure

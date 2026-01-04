@@ -1,7 +1,7 @@
 import { Account } from '@prisma/client';
-import accountRepository from '../repositories/account.repository';
-import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
-import { HttpError } from '../errors/HttpError';
+import accountRepository from 'repositories/account.repository';
+import { DB_GENERATED_FIELDS } from 'repositories/base.repository';
+import { HttpError } from 'errors/HttpError';
 
 const ERROR_MESSAGES = {
   ID_NOT_FOUND: 'Could not find account with given id: ',

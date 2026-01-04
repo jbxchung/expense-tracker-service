@@ -1,12 +1,13 @@
 import bcrypt from 'bcrypt';
 import { User, UserRole } from '@prisma/client';
 
-import config from '../config/config';
+import config from 'config/config';
 
-import userRepository from '../repositories/user.repository';
+import { CreateUserDto } from 'dto/user.dto';
+import userRepository from 'repositories/user.repository';
+import { DB_GENERATED_FIELDS } from 'repositories/base.repository';
+
 import categoryService from './category.service';
-import { CreateUserDto } from '../dto/user.dto';
-import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
 
 class UserService {
   async getAll(): Promise<User[]> {

@@ -1,5 +1,5 @@
 import { Prisma, Transaction } from '@prisma/client';
-import { prismaClient } from '../prisma/client';
+import { prismaClient } from 'prisma/client';
 import BaseRepository, { DB_GENERATED_FIELDS } from './base.repository';
 
 class TransactionRepository extends BaseRepository<typeof prismaClient.transaction> {

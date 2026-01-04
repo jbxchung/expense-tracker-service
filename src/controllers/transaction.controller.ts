@@ -1,8 +1,8 @@
 import { Request } from 'express';
 import { Transaction } from '@prisma/client';
-import transactionService from '../services/transaction.service';
-import { ApiResponse } from '../types/api-response';
-import { HttpError } from '../errors/HttpError';
+import transactionService from 'services/transaction.service';
+import { ApiResponse } from 'types/api-response';
+import { HttpError } from 'errors/HttpError';
 
 class TransactionController {
   async getTransactions(req: Request): Promise<ApiResponse<Transaction[]>> {

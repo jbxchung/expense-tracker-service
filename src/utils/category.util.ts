@@ -1,6 +1,6 @@
 import { Category } from '@prisma/client';
-import { CategoryTree } from '../types/category';
-import categoryRepository from '../repositories/category.repository';
+import { CategoryTree } from 'types/category';
+import categoryRepository from 'repositories/category.repository';
 
 // controller validation
 export function isCategoryTreeArray(obj: any): obj is CategoryTree[] {

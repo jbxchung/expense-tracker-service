@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import transactionController from '../controllers/transaction.controller';
-import { requireAuth } from '../middlewares/auth.middleware';
-import { handle } from '../utils/api.util';
+import transactionController from 'controllers/transaction.controller';
+import { requireAuth } from 'middlewares/auth.middleware';
+import { handle } from 'utils/api.util';
 
 const router = Router();
 

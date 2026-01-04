@@ -1,13 +1,13 @@
 import { Importer } from '@prisma/client';
 
-import { HttpError } from '../errors/HttpError';
+import { HttpError } from 'errors/HttpError';
 
-import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
-import importerRepository from '../repositories/importer.repository';
+import { DB_GENERATED_FIELDS } from 'repositories/base.repository';
+import importerRepository from 'repositories/importer.repository';
 
-import { StagedTransaction } from '../types/transaction';
+import { StagedTransaction } from 'types/transaction';
 
-import { getEngine } from '../engines/engine';
+import { getEngine } from 'engines/engine';
 
 const ERROR_MESSAGES = {
   ID_NOT_FOUND: 'Could not find importer with given id: ',

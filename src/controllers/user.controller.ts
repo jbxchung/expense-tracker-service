@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
-import userService from '../services/user.service';
-import { ApiResponse } from '../types/api-response';
+import { Request } from 'express';
 import { User } from '@prisma/client';
-import { HttpError } from '../errors/HttpError';
+import userService from 'services/user.service';
+import { ApiResponse } from 'types/api-response';
+import { HttpError } from 'errors/HttpError';
 
 class UserController {
   async getAll(): Promise<ApiResponse<User[]>> {

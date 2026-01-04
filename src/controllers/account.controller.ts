@@ -1,8 +1,8 @@
 import { Request } from 'express';
 import { Account } from '@prisma/client';
-import accountService from '../services/account.service';
-import { ApiResponse } from '../types/api-response';
-import { HttpError } from '../errors/HttpError';
+import accountService from 'services/account.service';
+import { ApiResponse } from 'types/api-response';
+import { HttpError } from 'errors/HttpError';
 
 class AccountController {
   async getAccounts(req: Request): Promise<ApiResponse<Account[]>> {

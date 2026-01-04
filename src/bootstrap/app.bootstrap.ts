@@ -1,4 +1,4 @@
-import categoryService from "../services/category.service";
+import categoryService from 'services/category.service';
 
 class AppBootstrapService {
   async run() {

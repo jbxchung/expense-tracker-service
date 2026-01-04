@@ -1,8 +1,8 @@
 import { Transaction } from '@prisma/client';
-import transactionRepository from '../repositories/transaction.repository';
-import { DB_GENERATED_FIELDS } from '../repositories/base.repository';
-import { HttpError } from '../errors/HttpError';
-import { TransactionCreateInput } from '../types/transaction';
+import transactionRepository from 'repositories/transaction.repository';
+import { DB_GENERATED_FIELDS } from 'repositories/base.repository';
+import { HttpError } from 'errors/HttpError';
+import { TransactionCreateInput } from 'types/transaction';
 
 const ERROR_MESSAGES = {
     ID_NOT_FOUND: 'Could not find transaction with given id: ',

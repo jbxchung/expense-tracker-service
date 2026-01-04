@@ -1,5 +1,5 @@
 import { AccountType, Prisma } from '@prisma/client';
-import { prismaClient } from '../prisma/client';
+import { prismaClient } from 'prisma/client';
 import BaseRepository from './base.repository';
 
 class AccountRepository extends BaseRepository<Prisma.AccountDelegate> {

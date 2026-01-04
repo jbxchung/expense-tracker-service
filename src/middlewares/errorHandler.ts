@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { HttpError } from '../errors/HttpError';
-import { ApiResponse } from '../types/api-response';
+import { HttpError } from 'errors/HttpError';
+import { ApiResponse } from 'types/api-response';
 
 export interface AppError extends Error {
   status?: number;

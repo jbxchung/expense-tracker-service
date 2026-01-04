@@ -1,38 +1,41 @@
 {
   "compilerOptions": {
-    /* === Core Settings === */
-    "target": "esnext",                    // Use modern JS features supported by Node 25
+    "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": ["es2023"],                     // Use modern built-in types
+    "lib": ["es2023"],
     "types": ["node", "express", "express-session"],
     "typeRoots": ["./src/types", "./node_modules/@types"],
-    "allowSyntheticDefaultImports": true,  // Allow `import express from "express"`
-    "esModuleInterop": true,               // Interop for CommonJS modules
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
-    /* === Strictness === */
-    "strict": true,                        // Enable all strict type checks
+    // strictness
+    "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
 
-    /* === Paths and Structure === */
-    "rootDir": "src",                      // Where your .ts files live
-    "outDir": "dist",                      // Where compiled .js files go
-    "resolveJsonModule": true,             // Allow importing JSON files
+    // path options
+    "rootDir": "src",
+    "outDir": "dist",
+    "resolveJsonModule": true,
 
-    /* === Emit Behavior === */
-    "skipLibCheck": true,                  // Speed up build (safe for Node)
-    "sourceMap": true,                     // Helpful for debugging
+    // emit options
+    "skipLibCheck": true,
+    "sourceMap": true,
     "removeComments": true,
-    "noEmitOnError": true,                 // Don't output .js if there are TS errors
+    "noEmitOnError": true,
 
-    /* === Node-style Imports === */
-    "allowImportingTsExtensions": false,   // Use `.ts` imports only internally
-    "moduleDetection": "force",            // Required for NodeNext with ESM
-    "isolatedModules": true                // Good for tools like ts-node or SWC
+    // imports
+    "allowImportingTsExtensions": false,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "baseUrl": "./src",
+    "paths": {
+      "*": ["*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "tests"]

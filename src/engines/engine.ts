@@ -1,5 +1,5 @@
 import { Importer } from '@prisma/client';
-import { StagedTransaction } from '../types/transaction';
+import { StagedTransaction } from 'types/transaction';
 import { CsvImportEngine } from './csv.engine';
 
 export interface ImportEngine {

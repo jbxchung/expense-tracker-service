@@ -1,12 +1,12 @@
 import { Request } from 'express';
 import { Category } from '@prisma/client';
 
-import { ApiResponse } from '../types/api-response';
-import { CategoryTree } from '../types/category';
+import { HttpError } from 'errors/HttpError';
+import { ApiResponse } from 'types/api-response';
+import { CategoryTree } from 'types/category';
 
-import { HttpError } from '../errors/HttpError';
-import categoryService from '../services/category.service';
-import { isCategoryTreeArray } from '../utils/category.util';
+import categoryService from 'services/category.service';
+import { isCategoryTreeArray } from 'utils/category.util';
 
 
 class CategoryController {

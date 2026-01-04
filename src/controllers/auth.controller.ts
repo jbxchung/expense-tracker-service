@@ -2,12 +2,13 @@ import bcrypt from 'bcrypt';
 import { Request } from 'express';
 import { User } from '@prisma/client';
 
-import userService from '../services/user.service';
-import { ApiResponse } from '../types/api-response';
-import { HttpError } from '../errors/HttpError';
-import { destroySession, saveSession } from '../utils/session.util';
-import { CreateUserDto, UserDto } from '../dto/user.dto';
-import { validatePassword } from '../utils/password.util';
+import { HttpError } from 'errors/HttpError';
+import { ApiResponse } from 'types/api-response';
+import { CreateUserDto, UserDto } from 'dto/user.dto';
+
+import userService from 'services/user.service';
+import { validatePassword } from 'utils/password.util';
+import { destroySession, saveSession } from 'utils/session.util';
 
 class AuthController {
   static readonly INVALID_CREDENTIALS = 'Invalid credentials';

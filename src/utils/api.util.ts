@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ApiResponse } from '../types/api-response';
+import { ApiResponse } from 'types/api-response';
 
 type AsyncController<T> = (req: Request) => Promise<ApiResponse<T>>;
 
