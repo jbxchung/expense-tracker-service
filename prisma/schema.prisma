@@ -86,15 +86,16 @@ enum ImporterType {
 }
 
 model Importer {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  type        ImporterType
-  mapping     Json          // the pipeline JSON (adapter + preprocess + mapping + postprocess)
+  id            String   @id @default(uuid())
+  name          String
+  description   String?
+  type          ImporterType
+  sourceFields  Json          // the fields available in the source file (e.g., CSV columns), `SourceField[]` type
+  mapping       Json          // the mapping JSON configuration, `ImporterMapping` type
 
-  userId      String?       // null for global importers
-  user        User?    @relation(fields: [userId], references: [id])
+  userId        String?       // null for global importers
+  user          User?    @relation(fields: [userId], references: [id])
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
