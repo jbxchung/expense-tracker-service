@@ -36,7 +36,7 @@ class ImporterController {
   };
 
   async createImporter(req: Request): Promise<ApiResponse<Importer>> {
-    const { name, description, userId, type, mapping } = req.body;
+    const { name, description, userId, type, sourceFields, mapping } = req.body;
 
     if (!name) throw new HttpError(400, 'Importer name is required');
 
@@ -45,6 +45,7 @@ class ImporterController {
       description,
       userId: userId || null,
       type,
+      sourceFields,
       mapping,
     });
 

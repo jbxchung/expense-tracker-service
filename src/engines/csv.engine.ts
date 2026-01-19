@@ -1,9 +1,7 @@
 import { Importer } from '@prisma/client';
 
-import { FieldRule, ImporterMapping, toImporter } from 'types/importer/importer';
+import { FieldMappingRule, FieldMappingRuleAction, FieldMappingRuleActionTypes, FieldMappingRuleCondition, FieldMappingRuleConditionTypes, ImporterMapping, toImporter } from 'types/importer';
 import { StagedTransaction, } from 'types/transaction';
-import { ConditionType } from 'types/importer/condition';
-import { FieldActionType, TransformType } from 'types/importer/action';
 
 import { ImportEngine } from './engine';
 
@@ -56,7 +54,7 @@ export class CsvImportEngine implements ImportEngine {
     return output;
   }
 
-  private applyRules(rules: FieldRule[], row: Record<string, string>): any {
+  private applyRules(rules: FieldMappingRule[], row: Record<string, string>): any {
     for (const rule of rules) {
       if (this.evaluateCondition(rule.condition, row)) {
         return this.applyAction(rule.action, row);
@@ -66,23 +64,25 @@ export class CsvImportEngine implements ImportEngine {
     return '';
   }
 
-  private evaluateCondition(cond: any, row: Record<string, string>): boolean {
+  private evaluateCondition(cond: FieldMappingRuleCondition, row: Record<string, string>): boolean {
     const value = row[cond.column];
+
+    if (!value) {
+      return false;
+    }
 
     try {
       switch (cond.type) {
-        case ConditionType.Exists:
+        case FieldMappingRuleConditionTypes.EXISTS:
           return value !== undefined && value !== "";
-        case ConditionType.IsDate:
-          return !isNaN(Date.parse(value!));
-        case ConditionType.Regex:
-          return (cond.patterns ?? []).some((p: string) => new RegExp(p).test(value!));
-        case ConditionType.MultiMatch:
-          const { exact = [], startsWith = [], regex = [] } = cond;
-          if (exact.includes(value)) return true;
-          if (startsWith.some((p: string) => value!.startsWith(p))) return true;
-          if (regex.some((p: string) => new RegExp(p).test(value!))) return true;
-          return false;
+        case FieldMappingRuleConditionTypes.MATCHES:
+          return cond.exact?.includes(value) ?? false;
+        case FieldMappingRuleConditionTypes.STARTS_WITH:
+          return cond.startsWith?.some((p: string) => value!.startsWith(p)) ?? false;
+        case FieldMappingRuleConditionTypes.INCLUDES:
+          return cond.includes?.some((p: string) => value!.includes(p)) ?? false;
+        case FieldMappingRuleConditionTypes.REGEX:
+          return cond.regex ? new RegExp(cond.regex).test(value!) : false;
         default:
           return false;
       }
@@ -92,31 +92,26 @@ export class CsvImportEngine implements ImportEngine {
     }
   }
 
-  private applyAction(action: any, row: Record<string, string>): any {
+  private applyAction(action: FieldMappingRuleAction, row: Record<string, string>): any {
     switch (action.type) {
-      case FieldActionType.UseColumn: {
+      case FieldMappingRuleActionTypes.USE_COLUMN: {
+        if (!action.column) return undefined;
+
         let val = row[action.column];
         if (val === undefined) return undefined;
 
-        if (action.transform) {
-          switch (action.transform) {
-            case TransformType.ParseDate:
-              return new Date(val);
-            case TransformType.Trim:
-              return val.trim();
-            case TransformType.Uppercase:
-              return val.toUpperCase();
-            case TransformType.Lowercase:
-              return val.toLowerCase();
-            default:
-              console.warn('Unknown transform type, will return raw value with no-op:', action.transform);
-              return val;
-          }
-        }
         return val;
       }
-      case FieldActionType.SetValue:
+      case FieldMappingRuleActionTypes.SET_VALUE:
         return action.value;
     }
   }
+}
+
+function trimQuotes(str: string): string {
+  if (!str) return str;
+  if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
+    return str.slice(1, -1);
+  }
+  return str;
 }
