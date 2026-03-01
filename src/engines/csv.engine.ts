@@ -24,24 +24,59 @@ export class CsvImportEngine implements ImportEngine {
 
   // parse csv into a list of rows where each row is an object with column names as keys
   private parseCsv(buffer: Buffer): Record<string, string>[] {
-    const csvString = buffer.toString('utf-8');
+    const csvString = buffer.toString('utf-8').replace(/\r\n/g, '\n');
     const lines = csvString.split('\n').filter(line => line.trim() !== '');
     if (!lines) {
       throw new Error('CSV file is empty or invalid');
     }
-    const headers = lines[0]!.split(',').map(header => header.trim());
+    const headers = this.parseCsvLine(lines[0]!);
     if (!headers) {
       throw new Error('CSV file has no headers');
     }
     const rows = lines.slice(1).map(line => {
-      const values = line.split(',').map(value => value.trim());
+      const values = this.parseCsvLine(line);
       const row: any = {};
       headers.forEach((header, index) => {
-        row[header] = values[index];
+        row[header] = values[index] ?? '';
       });
       return row;
     });
     return rows;
+  }
+
+  // handle escaped quotes, commas, and empty values
+  private parseCsvLine(line: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const nextChar = line[i + 1];
+
+      if (char === '"' && inQuotes && nextChar === '"') {
+        current += '"';
+        i++;
+        continue;
+      }
+
+      if (char === '"') {
+        inQuotes = !inQuotes;
+        continue;
+      }
+
+      if (char === ',' && !inQuotes) {
+        result.push(trimQuotes(current.trim()));
+        current = '';
+        continue;
+      }
+
+      current += char;
+    }
+
+    result.push(trimQuotes(current.trim()));
+
+    return result;
   }
 
   private processRow(row: Record<string, string>, mapping: ImporterMapping): StagedTransaction {
@@ -74,7 +109,10 @@ export class CsvImportEngine implements ImportEngine {
     try {
       switch (cond.type) {
         case FieldMappingRuleConditionTypes.EXISTS:
-          return value !== undefined && value !== "";
+          if (value === '') {
+            debugger;
+          }
+          return value !== undefined && value !== '';
         case FieldMappingRuleConditionTypes.MATCHES:
           return cond.exact?.includes(value) ?? false;
         case FieldMappingRuleConditionTypes.STARTS_WITH:
