@@ -14,7 +14,7 @@ import userRoutes from 'routes/user.route';
 const app = express();
 
 // middlewares
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(sessionMiddleware);
 app.use(accessLog);
 if (process.env.NODE_ENV === 'dev') {
