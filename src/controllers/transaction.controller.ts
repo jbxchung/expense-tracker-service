@@ -1,7 +1,9 @@
 import { Request } from 'express';
 import { Transaction } from '@prisma/client';
+
 import transactionService from 'services/transaction.service';
 import { ApiResponse } from 'types/api-response';
+import { TransactionCreateInput } from 'types/transaction';
 import { HttpError } from 'errors/HttpError';
 
 class TransactionController {
@@ -32,7 +34,23 @@ class TransactionController {
     };
   };
   
-  
+  async batchCreateTransactions(req: Request): Promise<ApiResponse<{ count: number }>> {
+    const { accountId } = req.params;
+    const transactions: TransactionCreateInput[] = req.body;
+
+    if (!accountId) {
+      throw new HttpError(400, 'accountId is required');
+    }
+
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+      throw new HttpError(400, 'transactions are required');
+    }
+
+    const result = await transactionService.bulkInsertFromStaged(accountId, transactions);
+    return { success: true, message: `Created ${result.count} transactions`, data: result };
+  };
+
+  // normal CRUD endpoints for transactions, not used as much but useful for testing and manual adjustments
   async createTransaction(req: Request): Promise<ApiResponse<Transaction>> {
     const newTransaction: Transaction = await transactionService.create(req.body);
     return { success: true, message: 'Created Transaction', data: newTransaction };
