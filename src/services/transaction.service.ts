@@ -21,7 +21,7 @@ class TransactionService {
       date: st.date,
       description: st.description,
       originalDescription: st.originalDescription,
-      categoryId: st.categoryId,
+      categoryId: st.categoryId || null,
     }));
     return transactionRepository.createMany(createInputs);
   }
