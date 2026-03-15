@@ -137,6 +137,15 @@ export class CsvImportEngine implements ImportEngine {
 
         let val = row[action.column];
         if (val === undefined) return undefined;
+        if (action.negate) {
+          // for numeric values like Amount, negate the value if specified
+          const num = parseFloat(val);
+          if (!isNaN(num)) {
+            val = (-num).toString();
+          } else {
+            console.warn(`Could not negate non-numeric value: ${val}`);
+          }
+        }
 
         return val;
       }

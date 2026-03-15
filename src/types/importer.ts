@@ -65,6 +65,7 @@ export type FieldMappingRuleAction = {
   type: 'useColumn' | 'setValue';
   column?: string;
   value?: string;
+  negate?: boolean; // for numeric values like Amount
   // transform?: 'uppercase' | 'lowercase' | 'trim';
 }
 export const FieldMappingRuleActionTypes = {
