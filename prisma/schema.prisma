@@ -49,6 +49,7 @@ model Category {
   id            String        @id @default(uuid())
   name          String
   description   String?
+  excludeFromReports Boolean       @default(false) // for categories like "Transfer" that shouldn't be included in spending reports
 
   userId        String?       // null for global categories
   user          User?         @relation(fields: [userId], references: [id])
@@ -98,4 +99,14 @@ model Importer {
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+// from session middleware
+model UserSession {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire])
+  @@map("user_sessions")
 }
