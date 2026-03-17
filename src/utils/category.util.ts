@@ -67,14 +67,14 @@ export async function traverseAndUpsertCategories(
   const results: Category[] = [];
 
   for (const node of nodes) {
-    const { id, name, description, sortOrder, children } = node;
+    const { id, name, description, sortOrder, children, excludeFromReports } = node;
 
     let savedCategory: Category;
 
     if (id && existingMap.has(id)) {
-      savedCategory = await categoryRepository.update(id, { name, description, parentId, sortOrder, userId });
+      savedCategory = await categoryRepository.update(id, { name, description, parentId, sortOrder, userId, excludeFromReports });
     } else {
-      savedCategory = await categoryRepository.create({ name, description, parentId, sortOrder, userId });
+      savedCategory = await categoryRepository.create({ name, description, parentId, sortOrder, userId, excludeFromReports });
     }
 
     results.push(savedCategory);
