@@ -83,11 +83,11 @@ class CategoryService {
       return;
     } else {
       const categories = [
-        { name: 'Food', description: 'Expenses for food and dining', sortOrder: 0, parentId: null, userId: null },
-        { name: 'Transportation', description: 'Expenses for transportation and travel', sortOrder: 1, parentId: null, userId: null },
-        { name: 'Utilities', description: 'Expenses for utilities like electricity, water, etc.', sortOrder: 2, parentId: null, userId: null },
-        { name: 'Entertainment', description: 'Expenses for entertainment and leisure activities', sortOrder: 3, parentId: null, userId: null },
-        { name: 'Health', description: 'Expenses for health and medical needs', sortOrder: 4, parentId: null, userId: null },
+        { name: 'Food', description: 'Expenses for food and dining', sortOrder: 0, parentId: null, userId: null, excludeFromReports: false },
+        { name: 'Transportation', description: 'Expenses for transportation and travel', sortOrder: 1, parentId: null, userId: null, excludeFromReports: false },
+        { name: 'Utilities', description: 'Expenses for utilities like electricity, water, etc.', sortOrder: 2, parentId: null, userId: null, excludeFromReports: false },
+        { name: 'Entertainment', description: 'Expenses for entertainment and leisure activities', sortOrder: 3, parentId: null, userId: null, excludeFromReports: false },
+        { name: 'Health', description: 'Expenses for health and medical needs', sortOrder: 4, parentId: null, userId: null, excludeFromReports: false },
       ];
 
       for (const category of categories) {
