@@ -3,7 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npx prisma generate --schema=prisma/schema.prisma
+# dummy db url for prisma generate, it only needs the schema anyway
+RUN DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy npx prisma generate
 RUN npm run build
  
 FROM node:20-alpine
