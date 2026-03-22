@@ -31,7 +31,6 @@ class TransactionService {
       description: st.description,
       originalDescription: st.originalDescription,
       categoryId: st.categoryId || null,
-      fileName,
       importId: importRecord.id,
     }));
     return transactionRepository.createMany(createInputs);

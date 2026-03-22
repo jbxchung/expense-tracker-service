@@ -8,7 +8,16 @@ class AccountRepository extends BaseRepository<Prisma.AccountDelegate> {
   }
 
   async findByUserId(userId: string) {
-    return this.model.findMany({ where: { userId } });
+    return this.model.findMany({
+      where: { userId },
+      include: {
+        imports: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          include: { importer: true },
+        },
+      },
+    });
   }
 
   async findByName(name: string, userId?: string) {

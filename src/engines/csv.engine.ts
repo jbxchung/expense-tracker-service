@@ -35,12 +35,18 @@ export class CsvImportEngine implements ImportEngine {
     }
     const rows = lines.slice(1).map(line => {
       const values = this.parseCsvLine(line);
+      
+      // skip empty rows
+      if (values.every(v => v.trim() === '')) {
+        return null;
+      }
+
       const row: any = {};
       headers.forEach((header, index) => {
         row[header] = values[index] ?? '';
       });
       return row;
-    });
+    }).filter(row => row !== null);
     return rows;
   }
 
