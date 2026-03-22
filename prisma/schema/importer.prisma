@@ -1,0 +1,20 @@
+// importer configurations
+enum ImporterType {
+  CSV
+}
+
+model Importer {
+  id            String   @id @default(uuid())
+  name          String
+  description   String?
+  type          ImporterType
+  sourceFields  Json          // the fields available in the source file (e.g., CSV columns), `SourceField[]` type
+  mapping       Json          // the mapping JSON configuration, `ImporterMapping` type
+
+  userId        String?       // null for global importers
+  user          User?    @relation(fields: [userId], references: [id])
+
+  imports      Import[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

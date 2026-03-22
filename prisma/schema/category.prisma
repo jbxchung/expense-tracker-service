@@ -1,0 +1,19 @@
+// user-defined category
+model Category {
+  id            String        @id @default(uuid())
+  name          String
+  description   String?
+  excludeFromReports Boolean       @default(false) // for categories like "Transfer" that shouldn't be included in spending reports
+
+  userId        String?       // null for global categories
+  user          User?         @relation(fields: [userId], references: [id])
+
+  sortOrder     Int           @default(0) // for ordering within the same parent
+  parentId      String?       // self-referential relationship for subcategories, null for top-level
+  parent        Category?     @relation("CategoryChildren", fields: [parentId], references: [id])
+  children      Category[]    @relation("CategoryChildren")
+
+  transactions  Transaction[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}

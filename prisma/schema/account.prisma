@@ -1,0 +1,21 @@
+// user-added account
+model Account {
+  id            String         @id @default(uuid())
+  name          String
+  type          AccountType
+
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+
+  transactions  Transaction[]
+  imports      Import[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  CREDIT_CARD
+}

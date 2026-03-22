@@ -1,0 +1,21 @@
+// imported transactions
+model Transaction {
+  id                  String    @id  @default(uuid())
+  amount              Decimal
+  date                DateTime  // parse from statement document
+
+  accountId           String
+  account             Account   @relation(fields: [accountId], references: [id])
+
+  categoryId          String?   // optional, transactions may be uncategorized
+  category            Category? @relation(fields: [categoryId], references: [id])
+
+  description         String?   // user-entered description
+  originalDescription String?   // raw description from statement document
+
+  importId            String?
+  import              Import?   @relation(fields: [importId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
