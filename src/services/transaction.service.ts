@@ -1,6 +1,7 @@
 import { Transaction } from '@prisma/client';
-import transactionRepository from 'repositories/transaction.repository';
 import { DB_GENERATED_FIELDS } from 'repositories/base.repository';
+import importRepository from 'repositories/import.repository';
+import transactionRepository from 'repositories/transaction.repository';
 import { HttpError } from 'errors/HttpError';
 import { TransactionCreateInput } from 'types/transaction';
 
@@ -13,8 +14,16 @@ class TransactionService {
     return transactionRepository.findByAccountAndDateRange(accountId, startDate, endDate);
   }
 
-  async bulkInsertFromStaged(accountId: string, inputTransactions: TransactionCreateInput[]) {
+  async bulkInsertFromStaged(accountId: string, inputTransactions: TransactionCreateInput[], fileName?: string, importerId?: string): Promise<{ count: number }> {
     if (!inputTransactions || !inputTransactions.length) return { count: 0 };
+
+    const importRecord = await importRepository.createImport({
+      accountId,
+      fileName,
+      importerId,
+      transactionCount: inputTransactions.length,
+    });
+
     const createInputs = inputTransactions.map(st => ({
       accountId,
       amount: st.amount,
@@ -22,6 +31,8 @@ class TransactionService {
       description: st.description,
       originalDescription: st.originalDescription,
       categoryId: st.categoryId || null,
+      fileName,
+      importId: importRecord.id,
     }));
     return transactionRepository.createMany(createInputs);
   }

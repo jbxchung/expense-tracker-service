@@ -3,7 +3,7 @@ import { Transaction } from '@prisma/client';
 
 import transactionService from 'services/transaction.service';
 import { ApiResponse } from 'types/api-response';
-import { TransactionCreateInput } from 'types/transaction';
+import { TransactionBatchCreateRequestBody } from 'types/transaction';
 import { HttpError } from 'errors/HttpError';
 
 class TransactionController {
@@ -36,7 +36,7 @@ class TransactionController {
   
   async batchCreateTransactions(req: Request): Promise<ApiResponse<{ count: number }>> {
     const { accountId } = req.params;
-    const transactions: TransactionCreateInput[] = req.body;
+    const { transactions, fileName, importerId }: TransactionBatchCreateRequestBody = req.body;
 
     if (!accountId) {
       throw new HttpError(400, 'accountId is required');
@@ -46,7 +46,7 @@ class TransactionController {
       throw new HttpError(400, 'transactions are required');
     }
 
-    const result = await transactionService.bulkInsertFromStaged(accountId, transactions);
+    const result = await transactionService.bulkInsertFromStaged(accountId, transactions, fileName, importerId);
     return { success: true, message: `Created ${result.count} transactions`, data: result };
   };
 
