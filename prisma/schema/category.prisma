@@ -1,6 +1,6 @@
 // user-defined category
 model Category {
-  id            String        @id @default(uuid())
+  id            String        @id @default(uuid(7))
   name          String
   description   String?
   excludeFromReports Boolean       @default(false) // for categories like "Transfer" that shouldn't be included in spending reports

@@ -1,6 +1,6 @@
 // for audit trail - track when and from where transactions were imported
 model Import {
-  id            String        @id @default(uuid())
+  id            String        @id @default(uuid(7))
   accountId     String
   account       Account       @relation(fields: [accountId], references: [id])
   fileName      String?

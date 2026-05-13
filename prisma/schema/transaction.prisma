@@ -1,6 +1,6 @@
 // imported transactions
 model Transaction {
-  id                  String    @id  @default(uuid())
+  id                  String    @id  @default(uuid(7))
   amount              Decimal
   date                DateTime  // parse from statement document
 

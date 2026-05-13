@@ -1,6 +1,6 @@
 // user-added account
 model Account {
-  id            String         @id @default(uuid())
+  id            String         @id @default(uuid(7))
   name          String
   type          AccountType
 
